@@ -1,0 +1,2 @@
+# SmartPhoneAutoDevelopSetup
+スマホでClaude Code Actionsを動かして勝手に開発させるためのテンプレートリポジトリ。
