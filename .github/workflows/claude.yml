@@ -19,40 +19,127 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write
+      pull-requests: write
+      issues: write
       id-token: write
       actions: read
+      checks: write
+      statuses: write
+      repository-projects: write
+      deployments: write
+    env:
+      TZ: Asia/Tokyo
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 👈 GH_TOKEN を追加して .mcp.json と一致させる
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Node.js をセットアップ
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # uv CLI を GitHub Action でセットアップ
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name "Claude Code"
+          git config --global user.email "claude-code@anthropic.com"
+          git config --global init.defaultBranch main
+
       - name: Install uv CLI
         uses: astral-sh/setup-uv@v4
 
-      # .mcp.json を読み込み
-      - name: Read MCP config
-        id: read_mcp
+      - name: Verify uvx is available   # 👈 追加
         run: |
-          echo "mcp=$(jq -c . .mcp.json)" >> $GITHUB_OUTPUT
+          which uvx || echo "uvx not found"
+          uvx --version || echo "uvx not working"
 
-      # Claude Code 実行
+      - name: Get PR info (only if PR)
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json
+
+      
+      - name: Export PR info
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          # PR_TITLE
+          jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
+            echo "PR_TITLE=$line" >> $GITHUB_ENV
+          done
+          
+          # PR_BODY
+          pr_body=$(jq -r .body pr_info.json | tr -d '\r')
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "$pr_body" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # PR_BASE / PR_HEAD は改行の心配が少ないので従来通り
+          echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+          echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          settings: ".claude/settings.json"
           additional_permissions: |
             actions: read
-          claude_args: '--model claude-sonnet-4-20250514'
-          mcp_config: ${{ steps.read_mcp.outputs.mcp }}
+          prompt: |
+            リポジトリ: ${{ github.repository }}
+            実行ユーザー: ${{ github.actor }}
+          
+            ## PR / Issue 情報
+            - PR番号: ${{ github.event.issue.number }}
+            - PRタイトル: ${{ env.PR_TITLE }}
+            - PR本文: ${{ env.PR_BODY }}
+            - コメント本文: ${{ github.event.comment.body }}
+          
+            ## ブランチ情報
+            - Baseブランチ: ${{ env.PR_BASE }}
+            - Headブランチ: ${{ env.PR_HEAD }}
+
+            ## ブランチ情報
+            - Baseブランチ: ${{ github.base_ref }}
+            - Headブランチ: ${{ github.head_ref }}
+            
+            # 基本ルール
+            ## Issueから起動された場合
+            専用のブランチを作成するようにしてください。
+            それをしなければ、このActionsは必ず失敗してしまいます。
+            作成してあるならば、そのブランチを使って
+            Issueに記述してある内容をもとに実装を開始してください。
+            実装ができたら、そのブランチにCommit & Pushして、
+            PRを作成してください。
+
+            ## PRから起動された場合
+            起動した際、PRに対して、Geminiがレビューをしてきているはずです。
+            それに従って修正を行い、修正をCommit & Pushしてください。
+            Pushしなければ、これらの変更は恒久的に失われます。
+            対象のブランチはPRと連携されているブランチです。
+      
+
+            # 基本ガイドライン
+            あなたはRustプロジェクトの開発を支援します。以下のガイドラインに従ってください：
+
+            ## Rust開発ガイドライン
+            - Cargo.tomlの依存関係を正しく管理する
+            - `cargo check`, `cargo build`, `cargo test`でコードを検証する
+            - エラーハンドリングにはResult型とError traitを活用する
+            - 所有権とライフタイムを適切に管理する
+            - パフォーマンスが重要な場合は最適化を考慮する
+            - ドキュメントコメント（///）を適切に記述する
+            - テストコードを含める（#[cfg(test)]モジュール）
+
+            ## 利用可能なツール
+            - sequential-thinking: 複雑な問題の段階的解決
+            - context7: ライブラリドキュメントの参照
+            - serena: プロジェクト構造の理解とコード編集
+            - docs-rs: Rustクレートのドキュメント検索
+            - github: GitHubリポジトリとの連携
