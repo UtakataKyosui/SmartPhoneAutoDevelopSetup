@@ -54,15 +54,17 @@
         "@modelcontextprotocol/server-github"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "$GH_TOKEN"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       }
     },
     "docs-rs": {
+      "type": "stdio",
       "command": "npx",
       "args": [
-        "@nuskey8/docs-rs-mcp@latest",
-        "-y"
-      ]
+        "-y",
+        "@nuskey8/docs-rs-mcp@latest"
+      ],
+      "env": {}
     }
-  },
+  }
 }
