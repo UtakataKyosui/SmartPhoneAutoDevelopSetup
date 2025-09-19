@@ -1,25 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cargo check:*)",
-      "Bash(cargo build:*)",
-      "Bash(cargo test:*)",
-      "Bash(cargo fmt:*)",
-      "Bash(cargo clippy:*)",
-      "Bash(cargo run:*)",
-      "Bash(curl:*)",
-      "Bash(sh:*)",
-      "Bash(source:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git branch:*)",
-      "Bash(git checkout:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(gh pr:*)",
-      "Bash(gh issue:*)",
+      "Bash",
       "Read",
       "Write",
       "Edit",
@@ -37,17 +19,6 @@
       "mcp__serena",
       "mcp__github",
       "mcp__docs-rs"
-    ],
-    "ask": [
-      "Bash(rm:*)",
-      "Bash(rmdir:*)",
-      "Write(.env*)",
-      "Write(*config*)"
-    ],
-    "deny": [
-      "Read(.env*)",
-      "Read(*secret*)",
-      "Read(*key*)"
     ]
   },
   "env": {
