@@ -38,6 +38,13 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 👈 GH_TOKEN を追加して .mcp.json と一致させる
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # ref を動的に切り分ける
+          ref: ${{ github.event.pull_request.base.ref || 'develop' }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
