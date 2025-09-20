@@ -33,6 +33,7 @@ jobs:
       # リポジトリの Projects（旧プロジェクトボード）を操作する権限
       repository-projects: write
       # deployments: write
+      id-token: write
     env:
       TZ: Asia/Tokyo
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
