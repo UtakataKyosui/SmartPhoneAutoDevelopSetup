@@ -95,4 +95,25 @@ jobs:
           use_sticky_comment: true 
           additional_permissions: |
             actions: read
-          prompt: ${{ env.PROMPT }}
+          prompt: | 
+            # Claude Code Prompt Template
+
+            ## GitHub コンテキスト
+            リポジトリ: ${{ github.repository }}
+            実行ユーザー:`${{ github.actor }}
+            
+            ### PR / Issue 情報
+            - PR番号: ${{ github.event.issue.number }}
+            - PRタイトル: ${{ env.PR_TITLE }}
+            - PR本文: |
+              ${{ env.PR_BODY }}
+            - コメント本文: |
+              ${{ github.event.comment.body }}
+            
+            ### ブランチ情報
+            - Baseブランチ: ${{ env.PR_BASE }}
+            - Headブランチ: ${{ env.PR_HEAD }}
+            - Baseブランチ (GitHub): ${{ github.base_ref }}
+            - Headブランチ (GitHub): ${{ github.head_ref }}
+
+            ${{ env.PROMPT }}
