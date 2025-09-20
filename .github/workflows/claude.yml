@@ -27,12 +27,10 @@ jobs:
       issues: write
       # 他のワークフローの実行状態やログの閲覧権限
       actions: read
-      # checks: write
       # commit や PR にステータスを付与する権限の付与
       statuses: write
       # リポジトリの Projects（旧プロジェクトボード）を操作する権限
       repository-projects: write
-      # deployments: write
       id-token: write
     env:
       TZ: Asia/Tokyo
@@ -100,6 +98,13 @@ jobs:
           use_sticky_comment: true 
           additional_permissions: |
             actions: read
+            contents: write
+            pull-requests: write
+            issues: write
+            actions: read
+            statuses: write
+            repository-projects: write
+            id-token: write
           prompt: | 
             # Claude Code Prompt Template
 
