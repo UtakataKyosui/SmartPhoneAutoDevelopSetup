@@ -99,7 +99,7 @@ jobs:
           settings: ".claude/settings.json"
           track_progress: true
           base_branch: ${{ github.event.pull_request.base.ref || 'develop' }}
-          branch_prefix: develop
+          branch_prefix: develop/
           use_sticky_comment: true 
           additional_permissions: |
             actions: read
