@@ -19,15 +19,20 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
+      # リポジトリのコードやファイルへのアクセス権を付与
       contents: write
+      # Pull Request周りの権限の付与
       pull-requests: write
+      # Issue の作成や更新の権限を付与
       issues: write
-      id-token: write
+      # 他のワークフローの実行状態やログの閲覧権限
       actions: read
-      checks: write
+      # checks: write
+      # commit や PR にステータスを付与する権限の付与
       statuses: write
+      # リポジトリの Projects（旧プロジェクトボード）を操作する権限
       repository-projects: write
-      deployments: write
+      # deployments: write
     env:
       TZ: Asia/Tokyo
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -37,20 +42,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+      - name: Install uv CLI
+        uses: astral-sh/setup-uv@v4
 
       - name: Setup Git configuration
         run: |
           git config --global user.name "Claude Code"
           git config --global user.email "claude-code@anthropic.com"
           git config --global init.defaultBranch main
-
-      - name: Install uv CLI
-        uses: astral-sh/setup-uv@v4
-
-      - name: Verify uvx is available   # 👈 追加
-        run: |
-          which uvx || echo "uvx not found"
-          uvx --version || echo "uvx not working"
 
       - name: Get PR info (only if PR)
         if: ${{ github.event.issue.pull_request }}
