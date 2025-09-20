@@ -96,7 +96,7 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           settings: ".claude/settings.json"
           track_progress: true
-          branch_prefix: develop/claude
+          branch_prefix: develop/
           use_sticky_comment: true 
           additional_permissions: |
             actions: read
