@@ -43,23 +43,23 @@
 以下のスラッシュコマンドが利用可能です：
 
 ### プロジェクト管理
-- `/setup-project` - プロジェクトの初期セットアップ
+- `/project-management:setup-project` - プロジェクトの初期セットアップ
 
 ### Spec Kit統合コマンド（仕様駆動開発）
-- `/specify` - 自然言語から仕様作成
-- `/plan` - 仕様から実装計画作成
-- `/clarify` - 仕様の対話的明確化
-- `/tasks` - TDD準拠のタスクリスト生成
-- `/implement` - TDDサイクルでの実装
-- `/analyze` - 既存仕様の分析
-- `/constitution` - プロジェクト憲法管理
+- `/spec-kit:specify` - 自然言語から仕様作成
+- `/spec-kit:plan` - 仕様から実装計画作成
+- `/spec-kit:clarify` - 仕様の対話的明確化
+- `/spec-kit:tasks` - TDD準拠のタスクリスト生成
+- `/spec-kit:implement` - TDDサイクルでの実装
+- `/spec-kit:analyze` - 既存仕様の分析
+- `/spec-kit:constitution` - プロジェクト憲法管理
 
 ### 開発支援
-- `/code-review` - コード品質分析とレビュー
-- `/debug-help` - デバッグ支援とエラー分析
-- `/refactor` - コードリファクタリングと改善
-- `/test-gen` - テストコード生成
-- `/docs-gen` - ドキュメント生成
+- `/development:code-review` - コード品質分析とレビュー
+- `/development:debug-help` - デバッグ支援とエラー分析
+- `/development:refactor` - コードリファクタリングと改善
+- `/development:test-gen` - テストコード生成
+- `/documentation:docs-gen` - ドキュメント生成
 
 ## 専門サブエージェント
 専門分野に特化したサブエージェントが利用可能です：
@@ -73,9 +73,9 @@
 ## 使用方法
 ### スラッシュコマンドの使用
 ```
-@claude /setup-project
-@claude /code-review src/main.rs
-@claude /test-gen --unit --integration
+@claude /project-management:setup-project
+@claude /development:code-review src/main.rs
+@claude /development:test-gen --unit --integration
 ```
 
 ### サブエージェントの呼び出し
