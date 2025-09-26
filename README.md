@@ -69,19 +69,136 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ## 🚦 使用方法
 
-### スラッシュコマンドの使用
-```
-@claude /project-management:setup-project
-@claude /development:code-review src/main.rs
-@claude /testing:test-gen --unit --integration
+### 基本的なワークフロー起動
+
+#### 1. 通常の開発作業 (`@claude`)
+**起動条件**: Issue または PR コメントで `@claude` を含める
+
+```markdown
+@claude ログイン機能を実装してください
+@claude /development:code-review src/auth.rs
+@claude rust-expert: 所有権エラーを修正してください
 ```
 
-### サブエージェントの呼び出し
+**トリガーイベント**:
+- Issue コメント作成時
+- PR レビューコメント作成時
+- Issue 作成・割り当て時
+- PR レビュー投稿時
+
+#### 2. プロジェクト初期セットアップ (`@claude setup`)
+**起動条件**: Issue または PR コメントで `@claude setup` を含める
+
+```markdown
+@claude setup 新しいRustプロジェクトをセットアップしてください
+@claude setup Web開発環境を構築してください
 ```
+
+**自動実行内容**:
+- プロジェクト構造の分析・作成
+- 設定ファイルの確認・生成
+- 依存関係の解決
+- 開発環境の初期化
+- CI/CD設定の確認
+
+#### 3. 仕様策定・計画作業 (`@claude plan`)
+**起動条件**: Issue または PR コメントで `@claude plan` を含める
+
+```markdown
+@claude plan ユーザー管理システムの仕様を作成してください
+@claude plan APIの設計を検討してください
+```
+
+**利用可能なコマンド**:
+- `/spec-kit:specify` - 自然言語から正式仕様を作成
+- `/spec-kit:plan` - 仕様から実装計画を生成
+- `/spec-kit:clarify` - 仕様の対話的明確化
+- `/spec-kit:tasks` - TDD準拠のタスクリスト生成
+- `/spec-kit:implement` - TDDサイクルでの実装
+
+### スラッシュコマンドの詳細使用方法
+
+#### プロジェクト管理
+```markdown
+@claude /project-management:setup-project
+# → プロジェクトの初期セットアップを実行
+```
+
+#### 開発支援
+```markdown
+@claude /development:code-review src/main.rs
+# → 指定ファイルのコードレビューを実行
+
+@claude /development:debug-help "認証エラーが発生します"
+# → デバッグ支援とエラー分析を実行
+
+@claude /development:refactor --target src/auth/
+# → 指定ディレクトリのリファクタリングを実行
+```
+
+#### テスト生成
+```markdown
+@claude /testing:test-gen --unit --integration
+# → ユニットテストと統合テストを生成
+
+@claude /testing:test-gen src/user_service.rs
+# → 指定ファイル用のテストを生成
+```
+
+#### ドキュメント生成
+```markdown
+@claude /documentation:docs-gen --api
+# → API ドキュメントを生成
+
+@claude /documentation:docs-gen README
+# → README ファイルを生成・更新
+```
+
+### サブエージェントの呼び出し方法
+
+```markdown
+# 言語・技術特化
 @claude rust-expert: 所有権エラーを修正してください
 @claude web-developer: レスポンシブデザインを実装してください
-@claude security-expert: 脆弱性を検査してください
+@claude mobile-developer: iOS向けUIを作成してください
+
+# 専門分野特化
+@claude security-expert: 脆弱性スキャンを実行してください
+@claude devops-engineer: CI/CDパイプラインを構築してください
+@claude data-scientist: データ分析コードを最適化してください
 ```
+
+### ワークフロー実行確認
+
+#### 実行状況の確認方法
+1. **GitHub Actions タブ**で実行状況を確認
+2. **Issue/PR のコメント**でリアルタイム進捗を確認
+3. **スティッキーコメント**で最終結果を確認
+
+#### 実行ログの確認
+```
+1. GitHub リポジトリの [Actions] タブを開く
+2. 該当のワークフロー実行を選択
+3. [claude], [claude-project], [claude-spec] などのジョブを選択
+4. ステップごとの詳細ログを確認
+```
+
+### トラブルシューティング
+
+#### よくある問題と解決方法
+
+**1. ワークフローが起動しない**
+- `@claude` キーワードがコメントに含まれているか確認
+- リポジトリの Actions が有効になっているか確認
+- 必要な Secrets (`CLAUDE_CODE_OAUTH_TOKEN`, `ANTHROPIC_API_KEY`) が設定済みか確認
+
+**2. 権限エラーが発生する**
+- GitHub Token の権限設定を確認
+- リポジトリの Settings > Actions > General の権限設定を確認
+
+**3. 特定のコマンドが動作しない**
+- `.claude/commands/` ディレクトリの該当ファイルが存在するか確認
+- コマンド名のスペルや形式が正しいか確認
 
 ## ⚙️ GitHub Actions
 
