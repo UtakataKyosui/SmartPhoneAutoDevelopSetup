@@ -58,7 +58,11 @@
 - `/development:code-review` - コード品質分析とレビュー
 - `/development:debug-help` - デバッグ支援とエラー分析
 - `/development:refactor` - コードリファクタリングと改善
-- `/development:test-gen` - テストコード生成
+
+### テスト
+- `/testing:test-gen` - テストコード生成
+
+### ドキュメンテーション
 - `/documentation:docs-gen` - ドキュメント生成
 
 ## 専門サブエージェント
@@ -75,7 +79,7 @@
 ```
 @claude /project-management:setup-project
 @claude /development:code-review src/main.rs
-@claude /development:test-gen --unit --integration
+@claude /testing:test-gen --unit --integration
 ```
 
 ### サブエージェントの呼び出し
