@@ -2,6 +2,36 @@
 
 このファイルは、Claude Codeで利用可能なカスタムスラッシュコマンドの詳細な使用方法を説明します。
 
+## コマンドディレクトリ構成
+
+カスタムスラッシュコマンドは以下のディレクトリ構成で管理されています：
+
+```
+.claude/commands/
+├── spec-kit/                    # 仕様駆動開発コマンド
+│   ├── specify.md               # 仕様作成
+│   ├── clarify.md               # 仕様明確化
+│   ├── plan.md                  # 実装計画作成
+│   ├── tasks.md                 # タスクリスト生成
+│   ├── implement.md             # TDD実装
+│   ├── analyze.md               # 仕様解析
+│   └── constitution.md          # プロジェクト憲法管理
+├── project-management/          # プロジェクト管理
+│   └── setup-project.md         # プロジェクト初期セットアップ
+├── development/                 # 開発支援
+│   ├── code-review.md           # コード品質分析
+│   ├── refactor.md              # リファクタリング
+│   └── debug-help.md            # デバッグ支援
+├── testing/                     # テスト関連
+│   └── test-gen.md              # テストコード生成
+└── documentation/               # ドキュメント
+    └── docs-gen.md              # ドキュメント生成
+```
+
+## GitHub Actions統合
+
+これらのコマンドはGitHub Actionsと統合して自動実行が可能です。詳細な仕様については、[CLAUDE_GITHUB_ACTIONS_SPECS.md](./CLAUDE_GITHUB_ACTIONS_SPECS.md)を参照してください。
+
 ## 利用可能なコマンド
 
 ### プロジェクト管理コマンド
