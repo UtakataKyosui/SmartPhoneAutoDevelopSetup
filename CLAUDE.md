@@ -123,7 +123,11 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 - `/development:code-review` - コード品質分析とレビュー
 - `/development:debug-help` - デバッグ支援とエラー分析
 - `/development:refactor` - コードリファクタリングと改善
+
+### テスト
 - `/testing:test-gen` - テストコード生成
+
+### ドキュメンテーション
 - `/documentation:docs-gen` - ドキュメント生成
 
 ## 専門サブエージェント
@@ -197,7 +201,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ```markdown
 @claude /project-management:setup-project
 # プロジェクトの初期セットアップを自動実行
-```
 
 #### Spec Kit統合コマンド
 ```markdown

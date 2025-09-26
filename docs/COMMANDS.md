@@ -175,17 +175,21 @@
 - 設計パターン適用
 - パフォーマンス最適化
 
-#### `/development:test-gen` - テストコード生成
+#### `/testing:test-gen` - テストコード生成
 **概要**: 自動テストコード生成
 **使用例**:
 ```bash
-@claude /development:test-gen --unit --integration
-@claude /development:test-gen src/models/user.rs
+@claude /testing:test-gen --unit --integration
+@claude /testing:test-gen src/models/user.rs
 ```
 **テスト種類**:
 - 単体テスト（unit）
 - 統合テスト（integration）
 - 契約テスト（contract）
+
+---
+
+### ドキュメンテーションコマンド
 
 #### `/documentation:docs-gen` - ドキュメント生成
 **概要**: 自動ドキュメント生成
