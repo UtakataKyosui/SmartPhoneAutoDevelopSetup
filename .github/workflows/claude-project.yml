@@ -1,0 +1,178 @@
+name: Claude Code Project Setup
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-project:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude setup')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude setup')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude setup')) ||
+      (github.event_name == 'issues' && (
+        contains(github.event.issue.body, '@claude setup') ||
+        contains(github.event.issue.title, '@claude setup')
+      ))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: read
+      statuses: write
+      repository-projects: write
+      id-token: write
+    env:
+      TZ: Asia/Tokyo
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install uv CLI
+        uses: astral-sh/setup-uv@v4
+
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name "Claude Code Project"
+          git config --global user.email "claude-code-project@anthropic.com"
+          git config --global init.defaultBranch main
+
+      - name: Get PR info (only if PR)
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
+            echo "Failed to get PR info, creating empty file"
+            echo '{}' > pr_info.json
+          fi
+
+      - name: Export PR info
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
+            jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
+              echo "PR_TITLE=$line" >> $GITHUB_ENV
+            done
+
+            pr_body=$(jq -r .body pr_info.json | tr -d '\r')
+            echo "PR_BODY<<EOF" >> $GITHUB_ENV
+            echo "$pr_body" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+            echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+          else
+            echo "PR_TITLE=" >> $GITHUB_ENV
+            echo "PR_BODY=" >> $GITHUB_ENV
+            echo "PR_BASE=" >> $GITHUB_ENV
+            echo "PR_HEAD=" >> $GITHUB_ENV
+          fi
+
+      - name: Load project management prompt
+        run: |
+          if [ -f docs/project-prompt.md ]; then
+            PROMPT_CONTENT="$(cat docs/project-prompt.md)"
+          else
+            PROMPT_CONTENT="# プロジェクト管理・初期セットアップ支援
+
+          ## プロジェクト管理コマンド利用可能
+
+          以下のスラッシュコマンドを適切に判断して実行してください：
+
+          - \`/project-management:setup-project\` - プロジェクトの初期セットアップ
+
+          ## 実行内容
+
+          ### プロジェクト初期セットアップ
+          - プロジェクト構造の分析・作成
+          - 設定ファイルの確認・生成
+          - 依存関係の解決
+          - 開発環境の初期化
+          - CI/CD設定の確認
+
+          ### 対象環境
+          - Rust、Node.js、Python、Go、Java/Kotlin等
+          - Web開発、モバイル開発、デスクトップ開発
+          - 各種フレームワーク・ライブラリに対応
+
+          ## 実行ガイドライン
+
+          1. **プロジェクト構造の確認**から開始
+          2. **READMEとCLAUDE.md**を参照して適切なセットアップを実行
+          3. **MCPツール**を優先使用
+          4. **開発環境の一貫性**を保持
+
+          コメント内容からプロジェクトのニーズを判断し、適切なセットアップを実行してください。"
+          fi
+          {
+            echo 'PROJECT_PROMPT<<EOF'
+            echo "$PROMPT_CONTENT"
+            echo 'EOF'
+          } >> $GITHUB_ENV
+
+      - name: Run Claude Code Project Management
+        id: claude-project
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          settings: ".claude/settings.json"
+          track_progress: true
+          branch_prefix: setup/
+          use_sticky_comment: true
+          additional_permissions: |
+            actions: read
+            contents: write
+            pull-requests: write
+            issues: write
+            statuses: write
+            repository-projects: write
+            id-token: write
+          prompt: |
+            # Claude Code プロジェクト管理・初期セットアップ支援
+
+            ## GitHub コンテキスト
+            リポジトリ: ${{ github.repository }}
+            実行ユーザー: ${{ github.actor }}
+
+            ### PR / Issue 情報
+            - PR番号: ${{ github.event.issue.number }}
+            - PRタイトル: ${{ env.PR_TITLE }}
+            - PR本文: |
+              ${{ env.PR_BODY }}
+            - コメント本文: |
+              ${{ github.event.comment.body }}
+
+            ### ブランチ情報
+            - Baseブランチ: ${{ env.PR_BASE }}
+            - Headブランチ: ${{ env.PR_HEAD }}
+            - Baseブランチ (GitHub): ${{ github.base_ref }}
+            - Headブランチ (GitHub): ${{ github.head_ref }}
+
+            ${{ env.PROJECT_PROMPT }}
+
+      - name: Post completion status
+        if: success()
+        run: |
+          echo "✅ Claude Code Project Management completed successfully"
+
+      - name: Post failure status
+        if: failure()
+        run: |
+          echo "❌ Claude Code Project Management failed"
+          exit 1

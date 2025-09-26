@@ -1,0 +1,190 @@
+name: Claude Code Documentation
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-docs:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude docs')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude docs')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude docs')) ||
+      (github.event_name == 'issues' && (
+        contains(github.event.issue.body, '@claude docs') ||
+        contains(github.event.issue.title, '@claude docs')
+      ))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: read
+      statuses: write
+      repository-projects: write
+      id-token: write
+    env:
+      TZ: Asia/Tokyo
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install uv CLI
+        uses: astral-sh/setup-uv@v4
+
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name "Claude Code Docs"
+          git config --global user.email "claude-code-docs@anthropic.com"
+          git config --global init.defaultBranch main
+
+      - name: Get PR info (only if PR)
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
+            echo "Failed to get PR info, creating empty file"
+            echo '{}' > pr_info.json
+          fi
+
+      - name: Export PR info
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
+            jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
+              echo "PR_TITLE=$line" >> $GITHUB_ENV
+            done
+
+            pr_body=$(jq -r .body pr_info.json | tr -d '\r')
+            echo "PR_BODY<<EOF" >> $GITHUB_ENV
+            echo "$pr_body" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+            echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+          else
+            echo "PR_TITLE=" >> $GITHUB_ENV
+            echo "PR_BODY=" >> $GITHUB_ENV
+            echo "PR_BASE=" >> $GITHUB_ENV
+            echo "PR_HEAD=" >> $GITHUB_ENV
+          fi
+
+      - name: Load documentation prompt
+        run: |
+          if [ -f docs/docs-prompt.md ]; then
+            PROMPT_CONTENT="$(cat docs/docs-prompt.md)"
+          else
+            PROMPT_CONTENT="# ドキュメント生成・改善支援
+
+          ## ドキュメント生成コマンド利用可能
+
+          以下のスラッシュコマンドを適切に判断して実行してください：
+
+          - \`/documentation:docs-gen\` - 自動ドキュメント生成
+
+          ## 生成可能なドキュメント
+
+          ### API仕様書
+          - OpenAPI/Swagger仕様書
+          - GraphQL スキーマドキュメント
+          - REST API エンドポイント一覧
+          - 認証・認可方式の説明
+
+          ### README・ガイド
+          - プロジェクトREADME
+          - インストール・セットアップガイド
+          - 使用方法・チュートリアル
+          - 貢献者向けガイド
+
+          ### コード仕様書
+          - モジュール・クラス仕様書
+          - 関数・メソッドリファレンス
+          - アーキテクチャ設計書
+          - データベーススキーマ
+
+          ### その他ドキュメント
+          - CHANGELOG・リリースノート
+          - ライセンス・著作権情報
+          - FAQ・トラブルシューティング
+          - デプロイメント手順
+
+          ## 実行ガイドライン
+
+          1. **プロジェクト構造**を分析してドキュメント種別を判断
+          2. **既存ドキュメント**を確認して更新・改善
+          3. **ターゲット読者**に応じた適切な詳細レベル
+          4. **多言語対応**（日本語・英語）
+
+          コメント内容から必要なドキュメント種別を判断し、適切な生成・更新を実行してください。"
+          fi
+          {
+            echo 'DOCS_PROMPT<<EOF'
+            echo "$PROMPT_CONTENT"
+            echo 'EOF'
+          } >> $GITHUB_ENV
+
+      - name: Run Claude Code Documentation
+        id: claude-docs
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          settings: ".claude/settings.json"
+          track_progress: true
+          branch_prefix: docs/
+          use_sticky_comment: true
+          additional_permissions: |
+            actions: read
+            contents: write
+            pull-requests: write
+            issues: write
+            statuses: write
+            repository-projects: write
+            id-token: write
+          prompt: |
+            # Claude Code ドキュメント生成・改善支援
+
+            ## GitHub コンテキスト
+            リポジトリ: ${{ github.repository }}
+            実行ユーザー: ${{ github.actor }}
+
+            ### PR / Issue 情報
+            - PR番号: ${{ github.event.issue.number }}
+            - PRタイトル: ${{ env.PR_TITLE }}
+            - PR本文: |
+              ${{ env.PR_BODY }}
+            - コメント本文: |
+              ${{ github.event.comment.body }}
+
+            ### ブランチ情報
+            - Baseブランチ: ${{ env.PR_BASE }}
+            - Headブランチ: ${{ env.PR_HEAD }}
+            - Baseブランチ (GitHub): ${{ github.base_ref }}
+            - Headブランチ (GitHub): ${{ github.head_ref }}
+
+            ${{ env.DOCS_PROMPT }}
+
+      - name: Post completion status
+        if: success()
+        run: |
+          echo "✅ Claude Code Documentation completed successfully"
+
+      - name: Post failure status
+        if: failure()
+        run: |
+          echo "❌ Claude Code Documentation failed"
+          exit 1

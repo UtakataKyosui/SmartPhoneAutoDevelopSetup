@@ -1,0 +1,183 @@
+name: Claude Code Project Management
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-project-management:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude spec')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude spec')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude spec')) ||
+      (github.event_name == 'issues' && (
+        contains(github.event.issue.body, '@claude spec') ||
+        contains(github.event.issue.title, '@claude spec')
+      ))
+    runs-on: ubuntu-latest
+    permissions:
+      # リポジトリのコードやファイルへのアクセス権を付与
+      contents: write
+      # Pull Request周りの権限の付与
+      pull-requests: write
+      # Issue の作成や更新の権限を付与
+      issues: write
+      # 他のワークフローの実行状態やログの閲覧権限
+      actions: read
+      # commit や PR にステータスを付与する権限の付与
+      statuses: write
+      # リポジトリの Projects（旧プロジェクトボード）を操作する権限
+      repository-projects: write
+      id-token: write
+    env:
+      TZ: Asia/Tokyo
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 👈 GH_TOKEN を追加して .mcp.json と一致させる
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install uv CLI
+        uses: astral-sh/setup-uv@v4
+
+      - name: Setup Git configuration
+        run: |
+          git config --global user.name "Claude Code PM"
+          git config --global user.email "claude-code-pm@anthropic.com"
+          git config --global init.defaultBranch main
+
+      - name: Get PR info (only if PR)
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
+            echo "Failed to get PR info, creating empty file"
+            echo '{}' > pr_info.json
+          fi
+
+      - name: Export PR info
+        if: ${{ github.event.issue.pull_request }}
+        run: |
+          if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
+            # PR_TITLE
+            jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
+              echo "PR_TITLE=$line" >> $GITHUB_ENV
+            done
+
+            # PR_BODY
+            pr_body=$(jq -r .body pr_info.json | tr -d '\r')
+            echo "PR_BODY<<EOF" >> $GITHUB_ENV
+            echo "$pr_body" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+            echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+          else
+            echo "PR_TITLE=" >> $GITHUB_ENV
+            echo "PR_BODY=" >> $GITHUB_ENV
+            echo "PR_BASE=" >> $GITHUB_ENV
+            echo "PR_HEAD=" >> $GITHUB_ENV
+          fi
+
+      - name: Load project management prompt from file
+        run: |
+          if [ -f docs/project-management-prompt.md ]; then
+            PROMPT_CONTENT="$(cat docs/project-management-prompt.md)"
+          else
+            PROMPT_CONTENT="# プロジェクト管理・仕様定義用 Claude Code
+
+          ## 実行可能なコマンド
+
+          ### Spec Kit統合コマンド（仕様駆動開発）
+          - \\`/spec-kit:specify\\` - 自然言語から仕様作成
+          - \\`/spec-kit:plan\\` - 仕様から実装計画作成
+          - \\`/spec-kit:clarify\\` - 仕様の対話的明確化
+          - \\`/spec-kit:tasks\\` - TDD準拠のタスクリスト生成
+          - \\`/spec-kit:implement\\` - TDDサイクルでの実装
+          - \\`/spec-kit:analyze\\` - 既存仕様の分析
+          - \\`/spec-kit:constitution\\` - プロジェクト憲法管理
+
+          ### プロジェクト管理
+          - \\`/project-management:setup-project\\` - プロジェクトの初期セットアップ
+
+          ### ドキュメント生成
+          - \\`/documentation:docs-gen\\` - ドキュメント生成
+
+          ## 実行ガイドライン
+
+          1. **TDD統合開発フロー**: 仕様駆動開発とテスト駆動開発を組み合わせたワークフロー
+          2. **Issue Driven開発**: すべての開発はIssueから開始し、Issueに紐づけて進める
+          3. **プロジェクト憲法遵守**: 開発原則の一貫した適用と品質ゲートの実行
+          4. **MCPツール優先使用**: 開発作業では基本的にMCPツールを使用する
+
+          プロジェクトのREADME.mdとCLAUDE.mdを参照して、仕様定義、計画、実装を進めてください。"
+          fi
+          {
+            echo 'PM_PROMPT<<EOF'
+            echo "$PROMPT_CONTENT"
+            echo 'EOF'
+          } >> $GITHUB_ENV
+
+      - name: Run Claude Code Project Management
+        id: claude-pm
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          settings: ".claude/settings.json"
+          track_progress: true
+          branch_prefix: feature/spec-
+          use_sticky_comment: true
+          additional_permissions: |
+            actions: read
+            contents: write
+            pull-requests: write
+            issues: write
+            statuses: write
+            repository-projects: write
+            id-token: write
+          prompt: |
+            # Claude Code Project Management Prompt
+
+            ## GitHub コンテキスト
+            リポジトリ: ${{ github.repository }}
+            実行ユーザー: ${{ github.actor }}
+
+            ### PR / Issue 情報
+            - PR番号: ${{ github.event.issue.number }}
+            - PRタイトル: ${{ env.PR_TITLE }}
+            - PR本文: |
+              ${{ env.PR_BODY }}
+            - コメント本文: |
+              ${{ github.event.comment.body }}
+
+            ### ブランチ情報
+            - Baseブランチ: ${{ env.PR_BASE }}
+            - Headブランチ: ${{ env.PR_HEAD }}
+            - Baseブランチ (GitHub): ${{ github.base_ref }}
+            - Headブランチ (GitHub): ${{ github.head_ref }}
+
+            ${{ env.PM_PROMPT }}
+
+      - name: Post completion status
+        if: success()
+        run: |
+          echo "✅ Claude Code Project Management completed successfully"
+
+      - name: Post failure status
+        if: failure()
+        run: |
+          echo "❌ Claude Code Project Management failed"
+          exit 1
