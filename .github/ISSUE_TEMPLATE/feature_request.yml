@@ -1,0 +1,163 @@
+name: 🚀 機能実装 / Feature Implementation
+description: 新機能の実装をリクエスト（Spec Kit + TDD 統合開発フロー対応）
+title: "[FEATURE] "
+labels: ["enhancement", "spec-kit", "tdd"]
+projects: ["SmartPhoneAutoDevelopSetup"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📱 スマートフォン自動開発環境 - 機能実装リクエスト
+
+        このテンプレートは **Spec Kit + TDD統合開発フロー** に対応しています。
+        Claude Code Actions を使用して、効率的な開発を行います。
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: 🎯 機能概要 / Feature Description
+      description: 実装したい機能を自然言語で詳しく説明してください
+      placeholder: |
+        例: ユーザー認証システム
+        - ログイン・ログアウト機能
+        - パスワードリセット機能
+        - セッション管理
+        - OAuth対応（Google, GitHub）
+      value: ""
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🔥 優先度 / Priority
+      description: この機能の優先度を選択してください
+      options:
+        - "🔴 高 (High) - 今すぐ実装が必要"
+        - "🟡 中 (Medium) - 近日中に実装したい"
+        - "🟢 低 (Low) - 余裕があるときに実装"
+      default: 1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: 📊 複雑度 / Complexity
+      description: 実装の複雑度を選択してください
+      options:
+        - "🟢 簡単 (Simple) - 1-2時間程度"
+        - "🟡 普通 (Medium) - 半日-1日程度"
+        - "🔴 複雑 (Complex) - 数日-1週間程度"
+        - "🟣 超複雑 (Very Complex) - 1週間以上"
+      default: 1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: development_phase
+    attributes:
+      label: 📋 開発フェーズ / Development Phase
+      description: どの開発フェーズから開始しますか？
+      options:
+        - label: "🔍 仕様策定 (`/spec-kit:specify`) - 自然言語から正式仕様を作成"
+          required: false
+        - label: "📝 計画立案 (`/spec-kit:plan`) - 技術選定と実装計画"
+          required: false
+        - label: "📌 タスク生成 (`/spec-kit:tasks`) - TDD準拠のタスクリスト作成"
+          required: false
+        - label: "⚡ 実装 (`/spec-kit:implement`) - Red-Green-Refactorサイクル"
+          required: false
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: ✅ 受入条件 / Acceptance Criteria
+      description: 機能が完成したと判断する条件を記載してください
+      placeholder: |
+        - [ ] ユーザーはメールアドレスとパスワードでログインできる
+        - [ ] 不正なログイン試行時はエラーメッセージが表示される
+        - [ ] ログイン後はダッシュボードにリダイレクトされる
+        - [ ] ユニットテストのカバレッジが80%以上
+        - [ ] E2Eテストが全て通る
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical_notes
+    attributes:
+      label: 🔧 技術的考慮事項 / Technical Considerations
+      description: 技術選定、アーキテクチャ、制約など
+      placeholder: |
+        - 使用予定技術: React, TypeScript, Node.js
+        - 外部API連携: なし
+        - パフォーマンス要件: レスポンス時間 < 500ms
+        - セキュリティ要件: JWT認証、HTTPS必須
+      value: ""
+
+  - type: checkboxes
+    id: specialist_agents
+    attributes:
+      label: 🤖 専門エージェント / Specialist Agents
+      description: どの専門エージェントを活用しますか？
+      options:
+        - label: "🦀 rust-expert - Rust開発専門家"
+          required: false
+        - label: "🌐 web-developer - Web開発専門家"
+          required: false
+        - label: "📱 mobile-developer - モバイルアプリ開発専門家"
+          required: false
+        - label: "🚀 devops-engineer - DevOpsとインフラ専門家"
+          required: false
+        - label: "📊 data-scientist - データサイエンスと機械学習専門家"
+          required: false
+        - label: "🔒 security-expert - セキュリティと脆弱性専門家"
+          required: false
+
+  - type: textarea
+    id: related_issues
+    attributes:
+      label: 🔗 関連Issue / Related Issues
+      description: 関連するIssueがあれば記載してください
+      placeholder: |
+        - Closes #123
+        - Related to #456
+        - Depends on #789
+      value: ""
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 GitHub Actions ワークフロー実行方法
+
+        このIssueを作成した後、以下のコメントでワークフローを実行できます：
+
+        ### 仕様策定・計画
+        ```
+        @claude plan
+        ```
+
+        ### 基本実装
+        ```
+        @claude 機能を実装してください
+        ```
+
+        ### 専門エージェント指定
+        ```
+        @claude rust-expert: この機能を実装してください
+        @claude web-developer: フロントエンドを作成してください
+        ```
+
+        ### コマンド実行
+        ```
+        @claude /spec-kit:specify
+        @claude /spec-kit:plan
+        @claude /spec-kit:implement
+        ```

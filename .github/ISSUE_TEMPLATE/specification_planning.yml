@@ -1,0 +1,219 @@
+name: 📋 仕様策定・計画 / Specification & Planning
+description: 新機能やプロジェクトの仕様策定と実装計画（Spec Kit専用）
+title: "[SPEC] "
+labels: ["spec-kit", "planning", "documentation"]
+projects: ["SmartPhoneAutoDevelopSetup"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📱 スマートフォン自動開発環境 - 仕様策定・計画
+
+        このテンプレートは **Spec Kit** を使用した仕様駆動開発に特化しています。
+        自然言語から正式仕様を作成し、実装計画まで自動生成します。
+
+  - type: textarea
+    id: project_overview
+    attributes:
+      label: 🎯 プロジェクト概要 / Project Overview
+      description: プロジェクトまたは機能の概要を自然言語で記載してください
+      placeholder: |
+        例: Eコマースサイトのユーザー管理システム
+        - 顧客情報の管理
+        - 購入履歴の追跡
+        - おすすめ商品の表示
+        - 会員ランク制度
+      value: ""
+    validations:
+      required: true
+
+  - type: dropdown
+    id: planning_scope
+    attributes:
+      label: 📏 計画スコープ / Planning Scope
+      description: 仕様策定の範囲を選択してください
+      options:
+        - "🏗️ プロジェクト全体 - 新規プロジェクトの全体設計"
+        - "🧩 機能群 - 複数の関連機能の設計"
+        - "⚡ 単一機能 - 個別機能の詳細設計"
+        - "🔧 改善・リファクタリング - 既存機能の改善計画"
+      default: 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project_phase
+    attributes:
+      label: 📅 プロジェクトフェーズ / Project Phase
+      description: 現在のプロジェクトフェーズを選択してください
+      options:
+        - "🌱 構想段階 - アイデアから仕様へ"
+        - "📝 仕様策定 - 詳細仕様の作成"
+        - "🏗️ 設計段階 - アーキテクチャとAPI設計"
+        - "⚡ 実装準備 - 実装計画とタスク作成"
+        - "🔄 見直し・改善 - 既存仕様の改善"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: business_requirements
+    attributes:
+      label: 💼 ビジネス要件 / Business Requirements
+      description: ビジネス上の要件や制約を記載してください
+      placeholder: |
+        - ターゲットユーザー: 20-40代の一般消費者
+        - 利用シーン: スマートフォンでの日常的な買い物
+        - パフォーマンス要件: ページ読み込み3秒以内
+        - 言語対応: 日本語、英語
+        - 法的制約: 個人情報保護法準拠
+      value: ""
+
+  - type: textarea
+    id: functional_requirements
+    attributes:
+      label: ⚙️ 機能要件 / Functional Requirements
+      description: 必要な機能を具体的に記載してください
+      placeholder: |
+        - ユーザー登録・ログイン機能
+        - 商品検索・フィルタリング機能
+        - ショッピングカート機能
+        - 決済処理機能
+        - 注文履歴管理機能
+      value: ""
+
+  - type: textarea
+    id: non_functional_requirements
+    attributes:
+      label: 🛡️ 非機能要件 / Non-Functional Requirements
+      description: パフォーマンス、セキュリティ、可用性などの要件
+      placeholder: |
+        - パフォーマンス: レスポンス時間 < 500ms
+        - セキュリティ: HTTPS通信、JWT認証
+        - 可用性: 99.9%のアップタイム
+        - スケーラビリティ: 同時1000ユーザー対応
+        - モバイル対応: レスポンシブデザイン
+      value: ""
+
+  - type: textarea
+    id: technical_constraints
+    attributes:
+      label: 🔧 技術的制約 / Technical Constraints
+      description: 技術的な制約や前提条件を記載してください
+      placeholder: |
+        - 既存システム: Laravel 9.x との連携必須
+        - インフラ: AWS環境での運用
+        - データベース: MySQL 8.0以上
+        - フロントエンド: React 18.x推奨
+        - 開発言語: TypeScript必須
+      value: ""
+
+  - type: checkboxes
+    id: spec_kit_workflow
+    attributes:
+      label: 📋 Spec Kit ワークフロー / Spec Kit Workflow
+      description: 実行したいSpec Kitワークフローを選択してください
+      options:
+        - label: "🔍 `/spec-kit:specify` - 自然言語から正式仕様を作成"
+          required: false
+        - label: "📝 `/spec-kit:plan` - 仕様から実装計画を生成"
+          required: false
+        - label: "❓ `/spec-kit:clarify` - 仕様の曖昧な点を対話的に明確化"
+          required: false
+        - label: "📌 `/spec-kit:tasks` - 実装計画からタスクリストを生成"
+          required: false
+        - label: "📊 `/spec-kit:analyze` - 既存仕様の分析と評価"
+          required: false
+        - label: "📜 `/spec-kit:constitution` - プロジェクト憲法の作成・更新"
+          required: false
+
+  - type: textarea
+    id: success_criteria
+    attributes:
+      label: 🎯 成功基準 / Success Criteria
+      description: プロジェクト成功の判断基準を記載してください
+      placeholder: |
+        - 月間アクティブユーザー数: 10,000人以上
+        - コンバージョン率: 3%以上
+        - ページ読み込み速度: 3秒以内
+        - ユーザー満足度: 4.0/5.0以上
+        - 開発期間: 3ヶ月以内で完了
+      value: ""
+
+  - type: textarea
+    id: stakeholders
+    attributes:
+      label: 👥 ステークホルダー / Stakeholders
+      description: 関係者とその役割を記載してください
+      placeholder: |
+        - プロダクトオーナー: 田中太郎
+        - 開発チームリーダー: 佐藤花子
+        - UIデザイナー: 山田次郎
+        - QAエンジニア: 鈴木愛子
+        - インフラエンジニア: 高橋一郎
+      value: ""
+
+  - type: checkboxes
+    id: specialist_consultation
+    attributes:
+      label: 🤖 専門コンサルテーション / Specialist Consultation
+      description: どの専門分野のコンサルテーションが必要ですか？
+      options:
+        - label: "🏗️ architect - システムアーキテクチャの設計"
+          required: false
+        - label: "🌐 web-developer - Web技術の選定"
+          required: false
+        - label: "📱 mobile-developer - モバイル対応の検討"
+          required: false
+        - label: "🚀 devops-engineer - インフラとデプロイの計画"
+          required: false
+        - label: "🔒 security-expert - セキュリティ要件の検討"
+          required: false
+        - label: "📊 data-scientist - データ分析要件の検討"
+          required: false
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: 📝 追加情報 / Additional Notes
+      description: その他の重要な情報や特記事項
+      placeholder: |
+        - 参考資料やベンチマーク
+        - 過去の類似プロジェクトの経験
+        - 特別な注意点
+        - 関連するIssueやドキュメント
+      value: ""
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 GitHub Actions ワークフロー実行方法
+
+        このIssueを作成した後、以下のコメントでワークフローを実行できます：
+
+        ### 仕様策定ワークフロー
+        ```
+        @claude plan 仕様を策定してください
+        ```
+
+        ### Spec Kit コマンド実行
+        ```
+        @claude /spec-kit:specify
+        @claude /spec-kit:plan
+        @claude /spec-kit:clarify
+        @claude /spec-kit:tasks
+        ```
+
+        ### 専門コンサルテーション
+        ```
+        @claude architect: システム設計を検討してください
+        @claude security-expert: セキュリティ要件を評価してください
+        ```
+
+        ### プロジェクト憲法作成
+        ```
+        @claude /spec-kit:constitution
+        ```

@@ -1,0 +1,211 @@
+name: 🐛 バグ報告 / Bug Report
+description: バグの報告と修正依頼（デバッグ支援対応）
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+projects: ["SmartPhoneAutoDevelopSetup"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📱 スマートフォン自動開発環境 - バグ報告
+
+        このテンプレートは **Claude Code Actions** のデバッグ支援機能に対応しています。
+        詳細な情報を提供することで、効率的なバグ修正が可能になります。
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: 🐛 バグの詳細 / Bug Description
+      description: 発生したバグについて詳しく説明してください
+      placeholder: |
+        例: ユーザーログイン時にセッションエラーが発生する
+        - ログインフォームでメールアドレスとパスワードを入力
+        - ログインボタンをクリック
+        - "Session expired" エラーが表示される
+        - 正常にログインできない
+      value: ""
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🔥 重要度 / Severity
+      description: バグの重要度を選択してください
+      options:
+        - "🚨 Critical - システムが使用不可"
+        - "🔴 High - 主要機能が動作しない"
+        - "🟡 Medium - 一部機能に影響"
+        - "🟢 Low - 軽微な問題"
+      default: 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 📊 発生頻度 / Frequency
+      description: バグの発生頻度を選択してください
+      options:
+        - "🔴 Always - 毎回発生する"
+        - "🟡 Often - よく発生する"
+        - "🟢 Sometimes - たまに発生する"
+        - "🔵 Rarely - まれに発生する"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: 🔄 再現手順 / Steps to Reproduce
+      description: バグを再現するための詳細な手順を記載してください
+      placeholder: |
+        1. アプリケーションを起動
+        2. ログインページにアクセス
+        3. メールアドレス: test@example.com を入力
+        4. パスワード: password123 を入力
+        5. "ログイン" ボタンをクリック
+        6. エラーが発生
+      value: |
+        1.
+        2.
+        3.
+        4.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: ✅ 期待される動作 / Expected Behavior
+      description: 正常な場合にどのような動作をするべきかを記載してください
+      placeholder: |
+        ユーザーが正しい認証情報を入力した場合、
+        正常にログインしてダッシュボードページにリダイレクトされるべき
+      value: ""
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: ❌ 実際の動作 / Actual Behavior
+      description: 実際に発生している問題の動作を記載してください
+      placeholder: |
+        "Session expired" エラーメッセージが表示され、
+        ログインできずにログインページに留まる
+      value: ""
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_messages
+    attributes:
+      label: 🚨 エラーメッセージ・ログ / Error Messages & Logs
+      description: エラーメッセージ、スタックトレース、ログなどを貼り付けてください
+      placeholder: |
+        ```
+        Error: Session expired
+        at SessionManager.validate (session.js:45)
+        at AuthController.login (auth.js:123)
+        ```
+      value: ""
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🌍 環境情報 / Environment
+      description: バグが発生した環境の詳細情報
+      placeholder: |
+        - OS: macOS 14.0
+        - ブラウザ: Chrome 120.0.6099.71
+        - Node.js: v18.17.0
+        - アプリバージョン: v1.2.3
+        - デバイス: iPhone 15 Pro (iOS 17.1)
+      value: |
+        - OS:
+        - ブラウザ:
+        - Node.js:
+        - アプリバージョン:
+        - デバイス:
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 📝 追加情報 / Additional Context
+      description: その他の関連情報があれば記載してください
+      placeholder: |
+        - 特定の条件下でのみ発生する
+        - 他の機能への影響
+        - 関連するIssueやPR
+        - スクリーンショット
+      value: ""
+
+  - type: checkboxes
+    id: debugging_assistance
+    attributes:
+      label: 🔍 デバッグ支援 / Debugging Assistance
+      description: どのようなデバッグ支援が必要ですか？
+      options:
+        - label: "🔍 `/development:debug-help` - エラー分析と調査支援"
+          required: false
+        - label: "🔧 `/development:code-review` - 関連コードのレビュー"
+          required: false
+        - label: "🧪 `/testing:test-gen` - バグ再現テストの作成"
+          required: false
+        - label: "🏥 `/development:refactor` - 問題箇所のリファクタリング"
+          required: false
+
+  - type: checkboxes
+    id: specialist_agents
+    attributes:
+      label: 🤖 専門エージェント / Specialist Agents
+      description: どの専門エージェントに調査を依頼しますか？
+      options:
+        - label: "🔒 security-expert - セキュリティ関連の問題"
+          required: false
+        - label: "🦀 rust-expert - Rust関連のバグ"
+          required: false
+        - label: "🌐 web-developer - フロントエンド・Web関連"
+          required: false
+        - label: "📱 mobile-developer - モバイルアプリ関連"
+          required: false
+        - label: "🚀 devops-engineer - インフラ・デプロイ関連"
+          required: false
+        - label: "📊 data-scientist - データ処理・分析関連"
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 GitHub Actions ワークフロー実行方法
+
+        このIssueを作成した後、以下のコメントでワークフローを実行できます：
+
+        ### デバッグ支援
+        ```
+        @claude このバグを調査してください
+        @claude /development:debug-help
+        ```
+
+        ### コードレビュー
+        ```
+        @claude review 関連するコードをレビューしてください
+        @claude /development:code-review src/auth/
+        ```
+
+        ### 専門エージェント指定
+        ```
+        @claude security-expert: このセキュリティ問題を調査してください
+        @claude web-developer: フロントエンドのバグを修正してください
+        ```
+
+        ### バグ修正実装
+        ```
+        @claude このバグを修正してください
+        @claude /testing:test-gen バグ再現テストを作成してください
+        ```

@@ -1,0 +1,251 @@
+name: 📚 ドキュメント作成 / Documentation
+description: API仕様書・ユーザーガイド・技術文書の作成・更新
+title: "[DOCS] "
+labels: ["documentation", "docs"]
+projects: ["SmartPhoneAutoDevelopSetup"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📱 スマートフォン自動開発環境 - ドキュメント作成
+
+        このテンプレートは **Claude Code Actions** のドキュメント生成機能に対応しています。
+        API仕様書、ユーザーガイド、技術文書を効率的に作成・更新します。
+
+  - type: dropdown
+    id: documentation_type
+    attributes:
+      label: 📋 ドキュメント種別 / Documentation Type
+      description: 作成・更新するドキュメントの種類を選択してください
+      options:
+        - "📖 README.md - プロジェクト概要・セットアップガイド"
+        - "🔧 API仕様書 - RESTful API・GraphQLの仕様"
+        - "👥 ユーザーガイド - エンドユーザー向け操作マニュアル"
+        - "🏗️ 技術仕様書 - アーキテクチャ・設計文書"
+        - "🧪 テスト仕様書 - テストケース・テスト計画"
+        - "🚀 デプロイガイド - 環境構築・デプロイ手順"
+        - "🔒 セキュリティガイド - セキュリティ要件・対策"
+        - "📱 モバイル対応ガイド - レスポンシブ・PWA対応"
+        - "🌍 多言語対応 - i18n・ローカライゼーション"
+        - "📝 変更履歴 - CHANGELOG・リリースノート"
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target_audience
+    attributes:
+      label: 👥 対象読者 / Target Audience
+      description: ドキュメントの主な対象読者を選択してください
+      options:
+        - "👨‍💻 開発者 - エンジニア・プログラマー"
+        - "👥 エンドユーザー - 一般利用者"
+        - "🏢 ビジネス関係者 - PM・ディレクター・営業"
+        - "🔧 運用担当者 - インフラ・DevOpsエンジニア"
+        - "🧪 QAエンジニア - テスト担当者"
+        - "🎨 デザイナー - UI/UXデザイナー"
+        - "📚 新規参加者 - プロジェクト初参加者"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: documentation_scope
+    attributes:
+      label: 📏 ドキュメント範囲 / Documentation Scope
+      description: 作成・更新するドキュメントの具体的な範囲を記載してください
+      placeholder: |
+        例: ユーザー管理APIの仕様書
+        - ユーザー登録・ログイン・ログアウト
+        - プロフィール情報の取得・更新
+        - パスワード変更・リセット
+        - OAuth認証（Google, GitHub）
+        - エラーレスポンスの仕様
+      value: ""
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_state
+    attributes:
+      label: 📄 現在の状況 / Current State
+      description: 既存ドキュメントの状況や問題点を記載してください
+      placeholder: |
+        - README.mdが古い情報になっている
+        - API仕様書が存在しない
+        - セットアップ手順が不明確
+        - エラーハンドリングの説明が不足
+        - サンプルコードが動作しない
+        - 多言語対応の説明が必要
+      value: ""
+
+  - type: textarea
+    id: required_sections
+    attributes:
+      label: 📝 必要セクション / Required Sections
+      description: ドキュメントに含めたいセクション・章立てを記載してください
+      placeholder: |
+        例: API仕様書の構成
+        1. 概要・認証方式
+        2. エンドポイント一覧
+        3. リクエスト・レスポンス形式
+        4. エラーコード一覧
+        5. サンプルコード
+        6. SDKの使用方法
+        7. よくある質問
+      value: ""
+
+  - type: checkboxes
+    id: content_requirements
+    attributes:
+      label: 📋 コンテンツ要件 / Content Requirements
+      description: ドキュメントに含めたい要素を選択してください
+      options:
+        - label: "💻 サンプルコード・実装例"
+          required: false
+        - label: "🖼️ 図表・フローチャート・画面キャプチャ"
+          required: false
+        - label: "🧪 実際の使用例・ユースケース"
+          required: false
+        - label: "⚠️ 注意事項・制限事項・既知の問題"
+          required: false
+        - label: "🔗 関連リンク・参考資料"
+          required: false
+        - label: "📊 パフォーマンス・ベンチマーク情報"
+          required: false
+        - label: "🔒 セキュリティ考慮事項"
+          required: false
+        - label: "📱 モバイル対応・レスポンシブ情報"
+          required: false
+        - label: "🌍 多言語対応・国際化情報"
+          required: false
+
+  - type: dropdown
+    id: format_preference
+    attributes:
+      label: 📄 フォーマット / Format
+      description: 希望するドキュメントフォーマットを選択してください
+      options:
+        - "📝 Markdown (.md) - GitHub・一般的なドキュメント"
+        - "📊 OpenAPI/Swagger - API仕様書"
+        - "📱 GitBook - 詳細なユーザーガイド"
+        - "🌐 HTML - Webページ形式"
+        - "📄 PDF - 印刷・配布用"
+        - "📋 Wiki - GitHub Wiki形式"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: style_requirements
+    attributes:
+      label: 🎨 スタイル要件 / Style Requirements
+      description: ドキュメントのスタイル・トーン・表記ルールを記載してください
+      placeholder: |
+        - 文体: である調・だ調
+        - 言語: 日本語メイン、英語併記
+        - 専門用語: 初心者にも分かりやすく説明
+        - コードスタイル: TypeScript推奨
+        - 図表スタイル: Mermaid記法使用
+        - 表記統一: API → API（全て大文字）
+      value: ""
+
+  - type: checkboxes
+    id: automation_features
+    attributes:
+      label: 🤖 自動化機能 / Automation Features
+      description: 活用したい自動化機能を選択してください
+      options:
+        - label: "📊 `/documentation:docs-gen` - ドキュメント自動生成"
+          required: false
+        - label: "🔄 コードからの自動抽出 - JSDoc・コメントから生成"
+          required: false
+        - label: "🧪 テストケースからの仕様抽出"
+          required: false
+        - label: "🔗 リンク有効性チェック"
+          required: false
+        - label: "📝 表記統一チェック・用語集管理"
+          required: false
+        - label: "🌍 多言語翻訳支援"
+          required: false
+        - label: "📱 レスポンシブ対応チェック"
+          required: false
+
+  - type: textarea
+    id: maintenance_plan
+    attributes:
+      label: 🔄 メンテナンス計画 / Maintenance Plan
+      description: ドキュメントの継続的な更新・メンテナンス計画を記載してください
+      placeholder: |
+        - 更新頻度: リリースごとに更新
+        - 責任者: 開発チームリーダー
+        - レビュープロセス: PRでのピアレビュー
+        - 品質チェック: 月次でリンク切れ確認
+        - ユーザーフィードバック: GitHubのIssueで収集
+      value: ""
+
+  - type: checkboxes
+    id: specialist_agents
+    attributes:
+      label: 🤖 専門エージェント / Specialist Agents
+      description: どの専門エージェントの支援が必要ですか？
+      options:
+        - label: "📝 scribe=ja - 日本語技術文書作成専門"
+          required: false
+        - label: "📝 scribe=en - 英語技術文書作成専門"
+          required: false
+        - label: "🌐 web-developer - Web技術ドキュメント"
+          required: false
+        - label: "📱 mobile-developer - モバイル対応ドキュメント"
+          required: false
+        - label: "🚀 devops-engineer - インフラ・デプロイドキュメント"
+          required: false
+        - label: "🔒 security-expert - セキュリティドキュメント"
+          required: false
+        - label: "📊 data-scientist - データ分析ドキュメント"
+          required: false
+
+  - type: textarea
+    id: related_resources
+    attributes:
+      label: 🔗 関連リソース / Related Resources
+      description: 参考になるドキュメント・リソースを記載してください
+      placeholder: |
+        - 参考サイト: https://api.example.com/docs
+        - 競合他社のAPI仕様: GitHub API v4
+        - 社内スタイルガイド: docs/style-guide.md
+        - 既存ドキュメント: docs/old-api-spec.md
+        - 関連Issue: #123, #456
+      value: ""
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 GitHub Actions ワークフロー実行方法
+
+        このIssueを作成した後、以下のコメントでワークフローを実行できます：
+
+        ### ドキュメント生成
+        ```
+        @claude docs ドキュメントを生成してください
+        @claude /documentation:docs-gen --api
+        ```
+
+        ### 専門エージェント指定
+        ```
+        @claude scribe=ja: 日本語でドキュメントを作成してください
+        @claude web-developer: Web技術のドキュメントを書いてください
+        ```
+
+        ### README更新
+        ```
+        @claude docs README.mdを更新してください
+        ```
+
+        ### 多言語対応
+        ```
+        @claude scribe=en: 英語版のドキュメントを作成してください
+        ```

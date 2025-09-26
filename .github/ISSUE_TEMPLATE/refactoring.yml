@@ -1,0 +1,226 @@
+name: 🔧 リファクタリング / Refactoring
+description: コード品質向上・技術的負債解消・パフォーマンス改善
+title: "[REFACTOR] "
+labels: ["refactoring", "technical-debt", "improvement"]
+projects: ["SmartPhoneAutoDevelopSetup"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📱 スマートフォン自動開発環境 - リファクタリング
+
+        このテンプレートは **Claude Code Actions** のリファクタリング支援機能に対応しています。
+        コード品質向上、技術的負債解消、パフォーマンス改善を効率的に実行します。
+
+  - type: dropdown
+    id: refactoring_type
+    attributes:
+      label: 🎯 リファクタリング種別 / Refactoring Type
+      description: リファクタリングの主な目的を選択してください
+      options:
+        - "🧹 コード品質向上 - 可読性・保守性の改善"
+        - "💸 技術的負債解消 - 設計上の問題解決"
+        - "⚡ パフォーマンス改善 - 速度・メモリ使用量最適化"
+        - "🏗️ アーキテクチャ改善 - 設計パターンの適用"
+        - "🔒 セキュリティ強化 - 脆弱性の解消"
+        - "📱 モバイル対応 - レスポンシブ・パフォーマンス改善"
+        - "🧪 テスタビリティ向上 - テストしやすい構造への変更"
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: 📏 対象範囲 / Scope
+      description: リファクタリングの対象範囲を選択してください
+      options:
+        - "🎯 単一ファイル - 特定ファイルの改善"
+        - "📁 モジュール単位 - 関連ファイル群の改善"
+        - "🏗️ コンポーネント単位 - 機能単位での改善"
+        - "🌐 システム全体 - アーキテクチャレベルの改善"
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_issues
+    attributes:
+      label: 🚨 現在の問題 / Current Issues
+      description: 現在のコードの問題点を具体的に記載してください
+      placeholder: |
+        例: ユーザー認証モジュールの問題点
+        - 1つのクラスに500行を超えるコードが集中
+        - 複数の責任を持つため、テストが困難
+        - パスワードハッシュ化ロジックが複数箇所に散在
+        - エラーハンドリングが不統一
+        - メモリリークの疑いがある処理
+      value: ""
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_files
+    attributes:
+      label: 📂 対象ファイル・ディレクトリ / Target Files/Directories
+      description: リファクタリング対象のファイルパスを記載してください
+      placeholder: |
+        例:
+        - src/auth/AuthManager.ts
+        - src/auth/PasswordHandler.ts
+        - src/utils/validators/
+        - tests/auth/
+      value: ""
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired_improvements
+    attributes:
+      label: 🎯 改善目標 / Desired Improvements
+      description: リファクタリング後に達成したい状態を記載してください
+      placeholder: |
+        - 単一責任原則に従ったクラス設計
+        - テストカバレッジ80%以上
+        - レスポンス時間50%短縮
+        - メモリ使用量30%削減
+        - コード複雑度を10以下に改善
+        - セキュリティ脆弱性ゼロ
+      value: ""
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🔥 優先度 / Priority
+      description: リファクタリングの緊急度を選択してください
+      options:
+        - "🚨 緊急 - セキュリティ・パフォーマンス上の重大な問題"
+        - "🔴 高 - 開発効率に大きく影響"
+        - "🟡 中 - 計画的に実施したい"
+        - "🟢 低 - 時間があるときに実施"
+      default: 2
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: quality_metrics
+    attributes:
+      label: 📊 品質指標 / Quality Metrics
+      description: 改善を測定したい指標を選択してください
+      options:
+        - label: "🧮 コード複雑度 (Cyclomatic Complexity)"
+          required: false
+        - label: "📏 コード行数・関数サイズ"
+          required: false
+        - label: "🧪 テストカバレッジ"
+          required: false
+        - label: "⚡ パフォーマンス (実行時間・メモリ使用量)"
+          required: false
+        - label: "🔒 セキュリティスコア"
+          required: false
+        - label: "🔄 重複コード率"
+          required: false
+        - label: "📖 ドキュメント品質"
+          required: false
+
+  - type: checkboxes
+    id: refactoring_techniques
+    attributes:
+      label: 🛠️ 適用技術・パターン / Refactoring Techniques
+      description: 適用を検討している技術・パターンを選択してください
+      options:
+        - label: "🏗️ デザインパターン (Strategy, Factory, Observer等)"
+          required: false
+        - label: "🧩 SOLID原則の適用"
+          required: false
+        - label: "🔄 DRY原則 (Don't Repeat Yourself)"
+          required: false
+        - label: "📦 依存性注入 (Dependency Injection)"
+          required: false
+        - label: "🎯 関数型プログラミング手法"
+          required: false
+        - label: "⚡ パフォーマンス最適化パターン"
+          required: false
+        - label: "🧪 テスト駆動開発 (TDD)"
+          required: false
+
+  - type: checkboxes
+    id: specialist_agents
+    attributes:
+      label: 🤖 専門エージェント / Specialist Agents
+      description: どの専門エージェントの支援が必要ですか？
+      options:
+        - label: "🦀 rust-expert - Rust固有のリファクタリング"
+          required: false
+        - label: "🌐 web-developer - フロントエンド最適化"
+          required: false
+        - label: "📱 mobile-developer - モバイルパフォーマンス改善"
+          required: false
+        - label: "🚀 devops-engineer - インフラ・デプロイ最適化"
+          required: false
+        - label: "🔒 security-expert - セキュリティ強化"
+          required: false
+        - label: "📊 data-scientist - データ処理最適化"
+          required: false
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: ⚠️ 制約事項 / Constraints
+      description: リファクタリング時の制約や注意事項を記載してください
+      placeholder: |
+        - 既存APIとの互換性を維持
+        - 本番環境への影響を最小限に
+        - 特定のライブラリは使用禁止
+        - パフォーマンス低下は許容不可
+        - 期限: 2週間以内
+      value: ""
+
+  - type: textarea
+    id: testing_strategy
+    attributes:
+      label: 🧪 テスト戦略 / Testing Strategy
+      description: リファクタリング時のテスト戦略を記載してください
+      placeholder: |
+        - 既存テストをすべて実行して回帰テストを確保
+        - 新しいユニットテストを追加
+        - E2Eテストでユーザー体験を確認
+        - パフォーマンステストで改善効果を測定
+        - セキュリティテストで脆弱性を確認
+      value: ""
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🚀 GitHub Actions ワークフロー実行方法
+
+        このIssueを作成した後、以下のコメントでワークフローを実行できます：
+
+        ### リファクタリング実行
+        ```
+        @claude このコードをリファクタリングしてください
+        @claude /development:refactor --target src/auth/
+        ```
+
+        ### コード品質分析
+        ```
+        @claude review コード品質を分析してください
+        @claude /development:code-review --focus quality
+        ```
+
+        ### 専門エージェント指定
+        ```
+        @claude rust-expert: Rustコードを最適化してください
+        @claude security-expert: セキュリティを強化してください
+        ```
+
+        ### パフォーマンス改善
+        ```
+        @claude パフォーマンスを改善してください
+        @claude /testing:test-gen --performance
+        ```
