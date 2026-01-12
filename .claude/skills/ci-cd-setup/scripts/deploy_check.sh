@@ -198,7 +198,7 @@ check_coverage() {
     case $PROJECT_TYPE in
         typescript)
             if [ -f "coverage/coverage-summary.json" ]; then
-                if command -v jq &> /dev/null; then
+                if command -v jq &> /dev/null && command -v bc &> /dev/null; then
                     COVERAGE=$(jq '.total.lines.pct' coverage/coverage-summary.json)
                     echo -e "${GREEN}カバレッジ: ${COVERAGE}%${NC}"
                     
@@ -209,7 +209,7 @@ check_coverage() {
                         echo -e "${GREEN}✓ カバレッジ目標を達成${NC}"
                     fi
                 else
-                    echo -e "${YELLOW}⚠ jqがインストールされていません${NC}"
+                    echo -e "${YELLOW}⚠ jqまたはbcがインストールされていません。カバレッジチェックをスキップします。${NC}"
                     WARNINGS=$((WARNINGS + 1))
                 fi
             else

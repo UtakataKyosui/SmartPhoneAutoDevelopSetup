@@ -59,8 +59,6 @@ npm install --save-dev jest ts-jest @types/jest
 
 ### 設定ファイル
 
-詳細な設定については [JEST.md](JEST.md) を参照してください。
-
 **基本設定**:
 ```javascript
 // jest.config.js
@@ -104,8 +102,6 @@ npx playwright install
 ```
 
 ### 設定ファイル
-
-詳細な設定については [PLAYWRIGHT.md](PLAYWRIGHT.md) を参照してください。
 
 **基本設定**:
 ```typescript
@@ -164,11 +160,6 @@ npm test -- --watch
 # 3. Refactor: 改善する
 # （テストが通る状態を維持）
 ```
-
-## 詳細ガイド
-
-- **Jest詳細**: [JEST.md](JEST.md) - テストパターン、モック、カバレッジ
-- **Playwright詳細**: [PLAYWRIGHT.md](PLAYWRIGHT.md) - E2Eテスト、ページオブジェクト、ベストプラクティス
 
 ## CI/CD統合
 
