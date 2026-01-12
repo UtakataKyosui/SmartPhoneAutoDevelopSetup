@@ -12,11 +12,13 @@ on:
 
 jobs:
   claude-review:
+    if: github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup'
     # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # if: |\n    #   github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup' && (
+    #     github.event.pull_request.user.login == 'external-contributor' ||
+    #     github.event.pull_request.user.login == 'new-developer' ||
+    #     github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    #   )
     
     runs-on: ubuntu-latest
     permissions:
@@ -31,23 +33,25 @@ jobs:
         with:
           fetch-depth: 1
           
+      - name: Render Claude Prompt
+        id: render_prompt
+        shell: bash
+        run: |
+          # No variables to substitute currently, but using envsubst for consistency and future extensibility
+          VARS=''
+          envsubst "$VARS" < .github/prompts/claude-code-review.md > prompt_rendered.md
+          
+          echo "CLAUDE_PROMPT<<EOF" >> $GITHUB_ENV
+          cat prompt_rendered.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
-
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
-
-            Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
+          prompt: ${{ env.CLAUDE_PROMPT }}
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.anthropic.com/en/docs/claude-code/sdk#command-line for available options

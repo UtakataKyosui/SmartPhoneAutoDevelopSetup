@@ -13,13 +13,15 @@ on:
 jobs:
   claude-project-management:
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude spec')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude spec')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude spec')) ||
-      (github.event_name == 'issues' && (
-        contains(github.event.issue.body, '@claude spec') ||
-        contains(github.event.issue.title, '@claude spec')
-      ))
+      github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup' && (
+        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude manage')) ||
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude manage')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude manage')) ||
+        (github.event_name == 'issues' && (
+          contains(github.event.issue.body, '@claude manage') ||
+          contains(github.event.issue.title, '@claude manage')
+        ))
+      )
     runs-on: ubuntu-latest
     permissions:
       # リポジトリのコードやファイルへのアクセス権を付与
@@ -40,56 +42,11 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 👈 GH_TOKEN を追加して .mcp.json と一致させる
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-claude-env
         with:
           fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install uv CLI
-        uses: astral-sh/setup-uv@v4
-
-      - name: Setup Git configuration
-        run: |
-          git config --global user.name "Claude Code PM"
-          git config --global user.email "claude-code-pm@anthropic.com"
-          git config --global init.defaultBranch main
-
-      - name: Get PR info (only if PR)
-        if: ${{ github.event.issue.pull_request }}
-        run: |
-          if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
-            echo "Failed to get PR info, creating empty file"
-            echo '{}' > pr_info.json
-          fi
-
-      - name: Export PR info
-        if: ${{ github.event.issue.pull_request }}
-        run: |
-          if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
-            # PR_TITLE
-            jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
-              echo "PR_TITLE=$line" >> $GITHUB_ENV
-            done
-
-            # PR_BODY
-            pr_body=$(jq -r .body pr_info.json | tr -d '\r')
-            echo "PR_BODY<<EOF" >> $GITHUB_ENV
-            echo "$pr_body" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-
-            echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
-            echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
-          else
-            echo "PR_TITLE=" >> $GITHUB_ENV
-            echo "PR_BODY=" >> $GITHUB_ENV
-            echo "PR_BASE=" >> $GITHUB_ENV
-            echo "PR_HEAD=" >> $GITHUB_ENV
-          fi
+          git-user-name: "Claude Code PM"
+          git-user-email: "claude-code-pm@anthropic.com"
 
       - name: Load project management prompt from file
         run: |
@@ -100,14 +57,6 @@ jobs:
 
           ## 実行可能なコマンド
 
-          ### Spec Kit統合コマンド（仕様駆動開発）
-          - \\`/spec-kit:specify\\` - 自然言語から仕様作成
-          - \\`/spec-kit:plan\\` - 仕様から実装計画作成
-          - \\`/spec-kit:clarify\\` - 仕様の対話的明確化
-          - \\`/spec-kit:tasks\\` - TDD準拠のタスクリスト生成
-          - \\`/spec-kit:implement\\` - TDDサイクルでの実装
-          - \\`/spec-kit:analyze\\` - 既存仕様の分析
-          - \\`/spec-kit:constitution\\` - プロジェクト憲法管理
 
           ### プロジェクト管理
           - \\`/project-management:setup-project\\` - プロジェクトの初期セットアップ
@@ -130,6 +79,24 @@ jobs:
             echo 'EOF'
           } >> $GITHUB_ENV
 
+      - name: Render Claude Prompt
+        id: render_prompt
+        shell: bash
+        run: |
+          export ISSUE_NUMBER="${{ github.event.issue.number }}"
+          export COMMENT_BODY="${{ github.event.comment.body }}"
+          export GITHUB_BASE_REF="${{ github.base_ref }}"
+          export GITHUB_HEAD_REF="${{ github.head_ref }}"
+          
+          # Define variables to substitute to avoid accidental replacement
+          VARS='$GITHUB_REPOSITORY $GITHUB_ACTOR $ISSUE_NUMBER $PR_TITLE $PR_BODY $COMMENT_BODY $PR_BASE $PR_HEAD $GITHUB_BASE_REF $GITHUB_HEAD_REF $PM_PROMPT'
+          
+          envsubst "$VARS" < .github/prompts/claude-project-management.md > prompt_rendered.md
+          
+          echo "CLAUDE_PROMPT<<EOF" >> $GITHUB_ENV
+          cat prompt_rendered.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Run Claude Code Project Management
         id: claude-pm
         uses: anthropics/claude-code-action@v1
@@ -148,28 +115,7 @@ jobs:
             statuses: write
             repository-projects: write
             id-token: write
-          prompt: |
-            # Claude Code Project Management Prompt
-
-            ## GitHub コンテキスト
-            リポジトリ: ${{ github.repository }}
-            実行ユーザー: ${{ github.actor }}
-
-            ### PR / Issue 情報
-            - PR番号: ${{ github.event.issue.number }}
-            - PRタイトル: ${{ env.PR_TITLE }}
-            - PR本文: |
-              ${{ env.PR_BODY }}
-            - コメント本文: |
-              ${{ github.event.comment.body }}
-
-            ### ブランチ情報
-            - Baseブランチ: ${{ env.PR_BASE }}
-            - Headブランチ: ${{ env.PR_HEAD }}
-            - Baseブランチ (GitHub): ${{ github.base_ref }}
-            - Headブランチ (GitHub): ${{ github.head_ref }}
-
-            ${{ env.PM_PROMPT }}
+          prompt: ${{ env.CLAUDE_PROMPT }}
 
       - name: Post completion status
         if: success()

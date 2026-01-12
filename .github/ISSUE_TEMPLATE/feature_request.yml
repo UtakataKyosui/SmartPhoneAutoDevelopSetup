@@ -1,7 +1,5 @@
 name: 🚀 機能実装 / Feature Implementation
-description: 新機能の実装をリクエスト（Spec Kit + TDD 統合開発フロー対応）
 title: "[FEATURE] "
-labels: ["enhancement", "spec-kit", "tdd"]
 projects: ["SmartPhoneAutoDevelopSetup"]
 assignees: []
 body:
@@ -10,23 +8,40 @@ body:
       value: |
         ## 📱 スマートフォン自動開発環境 - 機能実装リクエスト
 
-        このテンプレートは **Spec Kit + TDD統合開発フロー** に対応しています。
         Claude Code Actions を使用して、効率的な開発を行います。
 
   - type: textarea
-    id: feature_description
+    id: goal
     attributes:
-      label: 🎯 機能概要 / Feature Description
-      description: 実装したい機能を自然言語で詳しく説明してください
+      label: 🎯 ゴール・ユーザーストーリー / Goal & User Story
+      description: 誰が、何を、何のためにしたいのかを記載してください
       placeholder: |
-        例: ユーザー認証システム
-        - ログイン・ログアウト機能
-        - パスワードリセット機能
-        - セッション管理
-        - OAuth対応（Google, GitHub）
+        例: 顧客として、過去の注文を確認するために、注文履歴画面を見たい
       value: ""
     validations:
       required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 📝 背景・コンテキスト / Context & Background
+      description: なぜこの機能が必要なのか、現状の課題などを記載してください
+      value: ""
+    validations:
+      required: true
+  
+  - type: textarea
+    id: ui_ux
+    attributes:
+      label: 🖼️ UI/UXイメージ / UI/UX Expectations
+      description: 画面のイメージ、必要な要素、インタラクションなどを記載してください
+      placeholder: |
+        - リスト形式で注文を表示
+        - タップすると詳細画面へ遷移
+        - フィルタリング機能（期間、ステータス）
+      value: ""
+    validations:
+      required: false
 
   - type: dropdown
     id: priority
@@ -61,13 +76,13 @@ body:
       label: 📋 開発フェーズ / Development Phase
       description: どの開発フェーズから開始しますか？
       options:
-        - label: "🔍 仕様策定 (`/spec-kit:specify`) - 自然言語から正式仕様を作成"
+        - label: "📋 要件定義 / Requirements"
           required: false
-        - label: "📝 計画立案 (`/spec-kit:plan`) - 技術選定と実装計画"
+        - label: "📐 設計 / Design"
           required: false
-        - label: "📌 タスク生成 (`/spec-kit:tasks`) - TDD準拠のタスクリスト作成"
+        - label: "💻 実装 / Implementation"
           required: false
-        - label: "⚡ 実装 (`/spec-kit:implement`) - Red-Green-Refactorサイクル"
+        - label: "🧪 テスト / Testing"
           required: false
 
   - type: textarea
@@ -157,7 +172,4 @@ body:
 
         ### コマンド実行
         ```
-        @claude /spec-kit:specify
-        @claude /spec-kit:plan
-        @claude /spec-kit:implement
         ```

@@ -13,7 +13,6 @@ Agent Skillsは以下のディレクトリ構成で管理されています：
 ├── testing-rust/                # Rustテスト
 ├── ci-cd-setup/                 # CI/CD設定
 ├── library-research/            # ライブラリ調査
-├── spec-kit-workflow/           # Spec Kitワークフロー
 ├── code-review-workflow/        # コードレビューワークフロー
 ├── debugging-workflow/          # デバッグワークフロー
 ├── refactoring-workflow/        # リファクタリングワークフロー
@@ -106,11 +105,9 @@ Agent Skillsは以下のディレクトリ構成で管理されています：
 
 ---
 
-### 6. Spec Kitワークフロー（spec-kit-workflow）
 
 **概要**: 仕様駆動開発の完全なワークフロー
 
-**トリガー**: 「仕様作成」「Spec Kit」「実装計画」
 
 **主な内容**:
 1. **Specify**: 仕様作成
@@ -121,7 +118,6 @@ Agent Skillsは以下のディレクトリ構成で管理されています：
 6. **Analyze**: 品質分析
 7. **Constitution**: プロジェクト憲法
 
-**参照**: [spec-kit-workflow/SKILL.md](../.claude/skills/spec-kit-workflow/SKILL.md)
 
 ---
 
@@ -201,7 +197,6 @@ Skillsは、会話の内容に基づいて自動的にトリガーされます�
 
 ```
 「tdd-basicsのガイドに従ってテストを書きたい」
-「spec-kit-workflowで仕様を作成してください」
 「code-review-workflowのチェックリストを使ってレビューしてください」
 ```
 
@@ -210,7 +205,6 @@ Skillsは、会話の内容に基づいて自動的にトリガーされます�
 Skillsは相互に連携して、効率的な開発をサポートします：
 
 - **tdd-basics** ↔ **testing-typescript/rust**: TDDの実践
-- **spec-kit-workflow** ↔ **tdd-basics**: 仕様からTDD実装へ
 - **code-review-workflow** ↔ **testing-typescript/rust**: テストカバレッジレビュー
 - **debugging-workflow** ↔ **testing-typescript/rust**: デバッグテストの作成
 - **refactoring-workflow** ↔ **tdd-basics**: テストファーストリファクタリング
@@ -225,5 +219,4 @@ Skillsは相互に連携して、効率的な開発をサポートします：
 ## 関連ドキュメント
 
 - [AGENTS.md](./AGENTS.md) - サブエージェント詳細ガイド
-- [SPEC_KIT_TDD_WORKFLOW.md](./SPEC_KIT_TDD_WORKFLOW.md) - Spec Kit + TDD統合ワークフロー
 - [GITHUB_ACTIONS_SETUP.md](./GITHUB_ACTIONS_SETUP.md) - GitHub Actions設定ガイド

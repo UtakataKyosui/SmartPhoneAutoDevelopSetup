@@ -1,0 +1,73 @@
+name: 'Setup Claude Environment'
+description: 'Common setup steps for Claude Code workflows'
+inputs:
+  fetch-depth:
+    description: 'Number of commits to fetch. 0 indicates all history for all branches and tags'
+    required: false
+    default: '0'
+  git-user-name:
+    description: 'Git user name for commits'
+    required: false
+    default: 'Claude Code'
+  git-user-email:
+    description: 'Git user email for commits'
+    required: false
+    default: 'claude-code@anthropic.com'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install uv CLI
+      uses: astral-sh/setup-uv@v4
+
+    - name: Setup Git configuration
+      shell: bash
+      run: |
+        git config --global user.name "${{ inputs.git-user-name }}"
+        git config --global user.email "${{ inputs.git-user-email }}"
+        git config --global init.defaultBranch main
+
+    - name: Get PR info (only if PR)
+      if: ${{ github.event.issue.pull_request }}
+      shell: bash
+      run: |
+        if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
+          echo "Failed to get PR info, creating empty file"
+          echo '{}' > pr_info.json
+        fi
+
+    - name: Export PR info
+      if: ${{ github.event.issue.pull_request }}
+      shell: bash
+      run: |
+        if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
+          # PR_TITLE
+          pr_title=$(jq -r .title pr_info.json | tr -d '\r')
+          echo "PR_TITLE<<EOF" >> $GITHUB_ENV
+          echo "$pr_title" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # PR_BODY
+          pr_body=$(jq -r .body pr_info.json | tr -d '\r')
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "$pr_body" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+          echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
+        else
+          echo "PR_TITLE=" >> $GITHUB_ENV
+          echo "PR_BODY=" >> $GITHUB_ENV
+          echo "PR_BASE=" >> $GITHUB_ENV
+          echo "PR_HEAD=" >> $GITHUB_ENV
+        fi

@@ -1,12 +1,10 @@
 # SmartPhoneAutoDevelopSetup
 
 スマホでClaude Code Actionsを動かして自動開発するためのテンプレートリポジトリ。
-Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高いソフトウェア開発を実現します。
 
 ## 🚀 特徴
 
 - **スマホ対応開発環境**: スマートフォンからClaude Code Actionsで開発可能
-- **Spec Kit + TDD統合**: 仕様駆動開発とテスト駆動開発を組み合わせた開発フロー
 - **Issue Driven開発**: すべての開発はIssueから開始し、体系的に管理
 - **Agent Skills**: 10個の特化したSkillによる効率的なガイダンス
 - **最適化されたMCP**: 必要最小限のMCPサーバで効率的な開発
@@ -28,7 +26,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 │   │   └── library-research/  # ライブラリ調査
 │   └── hooks/                 # コード検証・整形スクリプト
 ├── .github/workflows/         # GitHub Actions
-├── .specify/                  # Spec Kit設定・テンプレート
 ├── docs/                      # プロジェクトドキュメント
 ├── .mcp.json                  # MCP設定（context7, magic, github）
 ├── CLAUDE.md                  # Claude Codeへの詳細指示
@@ -37,12 +34,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ## 🛠️ 開発フロー
 
-### Spec Kit + TDD 統合開発
-1. **仕様作成** (`/spec-kit:specify`) - 自然言語から正式仕様を作成
-2. **計画立案** (`/spec-kit:plan`) - 技術選定と実装計画
-3. **タスク生成** (`/spec-kit:tasks`) - TDD準拠のタスクリスト作成
-4. **TDD実装** (`/spec-kit:implement`) - Red-Green-Refactorサイクル
-5. **品質確認** (`/development:code-review`, `/spec-kit:constitution`) - 品質とプロジェクト憲法への準拠確認
 
 
 
@@ -75,7 +66,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 - ライブラリ比較・評価
 - 調査結果のドキュメント化
 
-### 6. spec-kit-workflow - Spec Kitワークフロー
 - 仕様作成（Specify）
 - 仕様明確化（Clarify）
 - 実装計画（Plan）
@@ -166,11 +156,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ```
 
 **利用可能なコマンド**:
-- `/spec-kit:specify` - 自然言語から正式仕様を作成
-- `/spec-kit:plan` - 仕様から実装計画を生成
-- `/spec-kit:clarify` - 仕様の対話的明確化
-- `/spec-kit:tasks` - TDD準拠のタスクリスト生成
-- `/spec-kit:implement` - TDDサイクルでの実装
 
 ### スラッシュコマンドの詳細使用方法
 
@@ -262,7 +247,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 - **claude.yml** - 基本的なClaude Code実行
 - **claude-project.yml** - プロジェクト管理ワークフロー
-- **claude-spec.yml** - Spec Kit統合ワークフロー
 - **claude-code-review.yml** - 自動コードレビュー
 - **claude-docs.yml** - ドキュメント生成
 - **claude-project-management.yml** - プロジェクト管理
@@ -271,7 +255,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 - [SKILLS.md](docs/SKILLS.md) - Agent Skills詳細ガイド
 - [AGENTS.md](docs/AGENTS.md) - サブエージェント詳細ガイド
-- [SPEC_KIT_TDD_WORKFLOW.md](docs/SPEC_KIT_TDD_WORKFLOW.md) - Spec Kit + TDD統合ワークフロー
 - [GITHUB_ACTIONS_SETUP.md](docs/GITHUB_ACTIONS_SETUP.md) - GitHub Actions設定ガイド
 - [CLAUDE.md](CLAUDE.md) - Claude Codeへの詳細指示
 
@@ -292,5 +275,4 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ## 📚 参考リンク
 
 - [Claude Code Actions Usage](https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md)
-- [Spec Kit Documentation](.specify/)
 - [プロジェクト憲法](.specify/memory/constitution.md)

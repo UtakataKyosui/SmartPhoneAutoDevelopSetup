@@ -1,0 +1,48 @@
+name: Issue Spec Clarification
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+jobs:
+  clarify-spec:
+    if: |
+      (github.event_name == 'issues' && !contains(github.event.issue.labels.*.name, 'spec: confirmed')) ||
+      (github.event_name == 'issue_comment' && !contains(github.event.issue.labels.*.name, 'spec: confirmed') && github.event.issue.user.login == github.event.comment.user.login)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Render Claude Prompt
+        id: render_prompt
+        shell: bash
+        run: |
+          export ISSUE_NUMBER="${{ github.event.issue.number }}"
+          export ISSUE_TITLE="${{ github.event.issue.title }}"
+          export ISSUE_BODY="${{ github.event.issue.body }}"
+          
+          # Define variables to substitute
+          VARS='$ISSUE_NUMBER $ISSUE_TITLE $ISSUE_BODY'
+          
+          envsubst "$VARS" < .github/prompts/issue-spec-clarification.md > prompt_rendered.md
+          
+          echo "CLAUDE_PROMPT<<EOF" >> $GITHUB_ENV
+          cat prompt_rendered.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Run Claude Spec Clarification
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: ${{ env.CLAUDE_PROMPT }}
+          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh issue comment:*),Bash(gh issue edit:*)"'
