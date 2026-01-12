@@ -57,14 +57,6 @@ jobs:
 
           ## 実行可能なコマンド
 
-          ### Spec Kit統合コマンド（仕様駆動開発）
-          - \\`/spec-kit:specify\\` - 自然言語から仕様作成
-          - \\`/spec-kit:plan\\` - 仕様から実装計画作成
-          - \\`/spec-kit:clarify\\` - 仕様の対話的明確化
-          - \\`/spec-kit:tasks\\` - TDD準拠のタスクリスト生成
-          - \\`/spec-kit:implement\\` - TDDサイクルでの実装
-          - \\`/spec-kit:analyze\\` - 既存仕様の分析
-          - \\`/spec-kit:constitution\\` - プロジェクト憲法管理
 
           ### プロジェクト管理
           - \\`/project-management:setup-project\\` - プロジェクトの初期セットアップ

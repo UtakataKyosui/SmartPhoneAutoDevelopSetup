@@ -197,8 +197,6 @@
 <!-- 実行されたスラッシュコマンドを記載 -->
 
 ```
-/spec-kit:specify
-/spec-kit:implement
 /development:code-review
 /testing:test-gen
 ```

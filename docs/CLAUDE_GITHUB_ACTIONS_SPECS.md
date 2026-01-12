@@ -1,7 +1,6 @@
 # Claude Code GitHub Actions 仕様書
 
 ## 概要
-このドキュメントは、仕様駆動開発（Spec Kit）およびテスト駆動開発（TDD）のための Claude Code と GitHub Actions の統合仕様を定義します。
 
 ## 1. 基本ワークフロー構成
 
@@ -46,8 +45,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    # 2. Spec Kit準備
-    - name: Setup Spec Kit
       run: |
         # .specify/ ディレクトリの確認・作成
         mkdir -p .specify/{templates,specs,outputs}
@@ -82,7 +79,6 @@ jobs:
 
 ### 2.3 コマンド仕様
 ```yaml
-# 利用可能なSpec Kitコマンド
 commands:
   - /specify    # 自然言語から仕様作成
   - /clarify    # 仕様の対話的明確化
@@ -181,7 +177,6 @@ jobs:
 
 ## 4. 統合ワークフロー
 
-### 4.1 Spec Kit + TDD統合
 ```yaml
 name: Integrated Spec-Driven TDD
 

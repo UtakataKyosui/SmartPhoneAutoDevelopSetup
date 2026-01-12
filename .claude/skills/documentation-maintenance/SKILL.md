@@ -469,7 +469,6 @@ jobs:
 
 ## 関連Skill
 
-- **spec-kit-workflow**: [spec-kit-workflow](../spec-kit-workflow/SKILL.md) - 仕様ドキュメント
 - **code-review-workflow**: [code-review-workflow](../code-review-workflow/SKILL.md) - ドキュメントレビュー
 
 ## 参考リソース

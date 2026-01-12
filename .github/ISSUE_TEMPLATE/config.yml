@@ -9,6 +9,5 @@ contact_links:
   - name: 🤖 Claude Code Actions ガイド
     url: https://github.com/UtakataKyosui/SmartPhoneAutoDevelopSetup/blob/main/docs/GITHUB_ACTIONS_SETUP.md
     about: GitHub Actionsワークフローの詳細な使用方法
-  - name: 📋 Spec Kit + TDD ワークフロー
     url: https://github.com/UtakataKyosui/SmartPhoneAutoDevelopSetup/blob/main/docs/SPEC_KIT_TDD_WORKFLOW.md
     about: 仕様駆動開発とTDD統合開発フローの詳細ガイド

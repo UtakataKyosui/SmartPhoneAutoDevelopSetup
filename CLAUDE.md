@@ -2,7 +2,6 @@
 
 ## プロジェクト概要
 このリポジトリは、スマートフォンからClaude Code Actionsを使って自動開発を行うためのテンプレートリポジトリです。
-Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高いソフトウェア開発を実現します。
 
 ### 主要な特徴
 - **スマホ対応開発環境**: モバイルデバイスから本格的な開発作業が可能
@@ -14,18 +13,11 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ### 基本原則
 - **共通ルール**: 変数命名、コードスタイル、コメントの書き方はプロジェクト内で統一
-- **Spec Kit + TDD統合開発**: 仕様駆動開発とテスト駆動開発を組み合わせた開発フロー
 - **Issue Driven 開発**: すべての開発はIssueから開始し、Issueに紐づけて進行
 - **MCPツールの使用必須**: 開発作業は基本的にMCPのツールを使用
 - **Formatter/Linter実行**: コード整形や静的解析はClaude CodeのHooksから自動実行
 - **プロジェクト憲法遵守**: 開発原則の一貫した適用と品質ゲートの確実な実行
 
-### Spec Kit + TDD 統合開発フロー
-1. **仕様作成** (`/spec-kit:specify`) - 自然言語から正式仕様を作成
-2. **計画立案** (`/spec-kit:plan`) - 技術選定と実装計画
-3. **タスク生成** (`/spec-kit:tasks`) - TDD準拠のタスクリスト作成
-4. **TDD実装** (`/spec-kit:implement`) - Red-Green-Refactorサイクル
-5. **品質確認** (`/development:code-review`, `/spec-kit:constitution`) - 品質とプロジェクト憲法への準拠確認
 
 ## プロジェクト構成
 
@@ -49,7 +41,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 │   ├── claude-code-review.yml # コードレビュー
 │   ├── claude-docs.yml        # ドキュメント生成
 │   └── claude-project-management.yml # 高度なプロジェクト管理
-├── .specify/                  # Spec Kit設定・テンプレート・実行スクリプト
 ├── docs/                      # プロジェクトドキュメント
 ├── .mcp.json                  # MCP設定（context7, magic, github）
 ├── CLAUDE.md                  # このファイル
@@ -85,7 +76,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
    - ライブラリ比較・評価
    - 調査結果のドキュメント化
 
-6. **spec-kit-workflow**: Spec Kitワークフロー
    - 仕様作成（Specify）
    - 仕様明確化（Clarify）
    - 実装計画（Plan）
@@ -125,7 +115,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ### ドキュメント
 - `docs/SKILLS.md` : Agent Skills詳細ガイド
 - `docs/AGENTS.md` : サブエージェント詳細ガイド
-- `docs/SPEC_KIT_TDD_WORKFLOW.md` : Spec Kit + TDD統合ワークフロー
 - `docs/GITHUB_ACTIONS_SETUP.md` : GitHub Actions設定ガイド
 - `docs/prompt.md` : カスタムプロンプト定義
 
@@ -146,7 +135,6 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 #### 3. claude-spec.yml - 仕様策定・計画
 **トリガー**: `@claude plan` を含むコメント・Issue・PR
 **用途**: 仕様作成、実装計画、アーキテクチャ設計
-**利用可能コマンド**: Spec Kit統合コマンド群
 
 #### 4. claude-code-review.yml - コードレビュー
 **トリガー**: `@claude review` を含むコメント・Issue・PR
@@ -251,18 +239,13 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 @claude /project-management:setup-project
 # プロジェクトの初期セットアップを自動実行
 
-#### Spec Kit統合コマンド
 ```markdown
-@claude /spec-kit:specify "ユーザー認証システム"
 # 自然言語から正式仕様を作成
 
-@claude /spec-kit:plan
 # 仕様から実装計画を生成
 
-@claude /spec-kit:tasks
 # TDD準拠のタスクリストを生成
 
-@claude /spec-kit:implement
 # TDDサイクルで実装を進行
 ```
 
