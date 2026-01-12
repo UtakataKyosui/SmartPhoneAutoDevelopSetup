@@ -24,7 +24,8 @@
   "env": {
     "TZ": "Asia/Tokyo",
     "NODE_ENV": "production",
-    "CI": "true"
+    "CI": "true",
+    "ANTHROPIC_CUSTOM_HEADERS": "{\"anthropic-beta\": \"code-execution-2025-08-25,skills-2025-10-02,files-api-2025-04-14\"}"
   },
   "model": "claude-sonnet-4-20250514",
   "enableAllProjectMcpServers": true,
