@@ -27,5 +27,8 @@
     "@commitlint/config-conventional": "^20.3.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7"
+  },
+  "lint-staged": {
+    "*": "echo 'No linters configured'"
   }
 }
