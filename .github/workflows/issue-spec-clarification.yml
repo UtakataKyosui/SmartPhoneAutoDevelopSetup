@@ -9,8 +9,10 @@ on:
 jobs:
   clarify-spec:
     if: |
-      (github.event_name == 'issues' && !contains(github.event.issue.labels.*.name, 'spec: confirmed')) ||
-      (github.event_name == 'issue_comment' && !contains(github.event.issue.labels.*.name, 'spec: confirmed') && github.event.issue.user.login == github.event.comment.user.login)
+      github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup' && (
+        (github.event_name == 'issues' && !contains(github.event.issue.labels.*.name, 'spec: confirmed')) ||
+        (github.event_name == 'issue_comment' && !contains(github.event.issue.labels.*.name, 'spec: confirmed') && github.event.issue.user.login == github.event.comment.user.login)
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: read
