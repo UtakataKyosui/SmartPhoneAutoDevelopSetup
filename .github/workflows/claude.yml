@@ -92,7 +92,12 @@ jobs:
           if [ -f docs/prompt.md ]; then
             PROMPT_CONTENT="$(cat docs/prompt.md)"
           else
-            PROMPT_CONTENT="# プロジェクト固有の指示\n\nプロジェクトのREADME.mdとCLAUDE.mdを参照して開発を進めてください。"
+            PROMPT_CONTENT="# プロジェクト固有の指示
+
+          ## Agent Skills利用可能
+          以下のAgent Skillsを参照してください
+
+          プロジェクトのREADME.mdとCLAUDE.mdを参照して開発を進めてください。"
           fi
           {
             echo 'PROMPT<<EOF'
