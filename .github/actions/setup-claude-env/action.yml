@@ -52,9 +52,10 @@ runs:
       run: |
         if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
           # PR_TITLE
-          jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
-            echo "PR_TITLE=$line" >> $GITHUB_ENV
-          done
+          pr_title=$(jq -r .title pr_info.json | tr -d '\r')
+          echo "PR_TITLE<<EOF" >> $GITHUB_ENV
+          echo "$pr_title" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           
           # PR_BODY
           pr_body=$(jq -r .body pr_info.json | tr -d '\r')
