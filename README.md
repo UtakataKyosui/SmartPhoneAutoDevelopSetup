@@ -34,10 +34,29 @@
 
 ## 🛠️ 開発フロー
 
+このリポジトリを使用した標準的な開発サイクルは以下の通りです。
 
+### 1. Issue作成と仕様策定
+機能追加やバグ修正は必ず **Issue** から開始します。
+- 適切な **Issue Template** (Feature/Bug) を選択して起票します。
+- 必要に応じて `@claude` と対話し、仕様を明確化します (`spec: confirmed` ラベルの獲得を目指します)。
 
+### 2. 実装計画 (Planning)
+- Issueコメントで `@claude plan` を実行します。
+- Claudeが要件に基づいた詳細な実装計画を提案します。
 
-## 🎯 Agent Skills
+### 3. テスト駆動開発 (TDD)
+- **Red**: `@claude /testing:test-gen` を使用して、まず失敗するテストを作成します。
+- **Green**: テストを通すための最小限の実装を行います。
+- **Refactor**: `@claude /development:refactor` 等を用いてコードを整理します。
+
+### 4. Pull Request とレビュー
+- 実装が完了したら **Pull Request** を作成します。
+- 自動的に `claude-code-review` ワークフローが走り、コード品質やセキュリティのチェックが行われます。
+- `@claude /development:code-review` で手動レビューも可能です。
+
+### 5. マージ
+- すべてのチェックとレビューが完了したら、mainブランチへマージします。## 🎯 Agent Skills
 
 開発作業を効率化する10個の特化したSkillを提供：
 
