@@ -6,7 +6,7 @@
 
 - **スマホ対応開発環境**: スマートフォンからClaude Code Actionsで開発可能
 - **Issue Driven開発**: すべての開発はIssueから開始し、体系的に管理
-- **Agent Skills**: 10個の特化したSkillによる効率的なガイダンス
+- **Agent Skills**: 9個の特化したSkillによる効率的なガイダンス
 - **最適化されたMCP**: 必要最小限のMCPサーバで効率的な開発
 - **自動化されたワークフロー**: GitHub Actionsによる自動レビュー・テスト・デプロイ
 - **豊富なスラッシュコマンド**: 開発作業を効率化するカスタムコマンド
@@ -16,9 +16,8 @@
 
 ```
 ├── .claude/                    # Claude Code設定
-│   ├── commands/              # カスタムスラッシュコマンド
 │   ├── agents/                # 専門サブエージェント
-│   ├── skills/                # Agent Skills（10個）
+│   ├── skills/                # Agent Skills（9個）
 │   │   ├── tdd-basics/        # TDD基礎
 │   │   ├── testing-typescript/ # TypeScript/JavaScriptテスト
 │   │   ├── testing-rust/      # Rustテスト
@@ -34,12 +33,23 @@
 
 ## 🛠️ 開発フロー
 
-
+1. **Issue 作成**: 機能要望やバグ報告をIssueとして作成
+   - `issue-spec-clarification` ワークフローが自動起動し、仕様を明確化
+2. **計画策定**: `@claude plan` で実装計画を立案
+   - 必要なSkillやサブエージェントを選定
+3. **実装**: `@claude` でコーディング
+   - TDD（Red-Green-Refactor）サイクルを遵守
+   - サブエージェント（`rust-expert`等）を活用
+4. **レビュー**: `claude-code-review` で自動チェック
+   - セキュリティ、パフォーマンス、コードスタイルを検証
+5. **プロジェクト管理**: `claude-project-management` で進捗同期
+   - Issueの状態やタスクリストを自動更新
 
 
 ## 🎯 Agent Skills
 
-開発作業を効率化する10個の特化したSkillを提供：
+開発作業を効率化する9個の特化したSkillを提供：
+
 
 ### 1. tdd-basics - TDD基礎
 - Red-Green-Refactorサイクル
@@ -66,13 +76,10 @@
 - ライブラリ比較・評価
 - 調査結果のドキュメント化
 
-- 仕様作成（Specify）
-- 仕様明確化（Clarify）
-- 実装計画（Plan）
-- タスク生成（Tasks）
-- TDD実装（Implement）
-- 品質分析（Analyze）
-- プロジェクト憲法（Constitution）
+### 6. documentation-maintenance - ドキュメントメンテナンス
+- README・API ドキュメント作成
+- ドキュメント品質チェック
+- 継続的なメンテナンス
 
 ### 7. code-review-workflow - コードレビューワークフロー
 - 体系的なレビュープロセス
@@ -250,6 +257,7 @@
 - **claude-code-review.yml** - 自動コードレビュー
 - **claude-docs.yml** - ドキュメント生成
 - **claude-project-management.yml** - プロジェクト管理
+- **issue-spec-clarification.yml** - Issue仕様明確化
 
 ## 📖 詳細ドキュメント
 
