@@ -48,7 +48,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ## 🎯 Agent Skills
 
-開発作業を効率化する5つの特化したSkillを提供：
+開発作業を効率化する10個の特化したSkillを提供：
 
 ### 1. tdd-basics - TDD基礎
 - Red-Green-Refactorサイクル

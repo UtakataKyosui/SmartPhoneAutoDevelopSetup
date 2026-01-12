@@ -58,7 +58,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ### Agent Skills
 
-本プロジェクトは5つの特化したAgent Skillsを提供します：
+本プロジェクトは10個の特化したAgent Skillsを提供します：
 
 1. **tdd-basics**: TDD基礎（言語非依存）
    - Red-Green-Refactorサイクル

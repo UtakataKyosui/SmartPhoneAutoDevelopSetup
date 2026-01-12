@@ -67,10 +67,8 @@ run_typescript_tests() {
     # テストフレームワークの検出
     if grep -q "jest" package.json; then
         FRAMEWORK="jest"
-        TEST_CMD="npm test"
     elif grep -q "@playwright/test" package.json; then
         FRAMEWORK="playwright"
-        TEST_CMD="npx playwright test"
     else
         echo -e "${RED}❌ テストフレームワークが見つかりません${NC}"
         echo "package.json に jest または @playwright/test を追加してください"
@@ -80,27 +78,36 @@ run_typescript_tests() {
     echo -e "${GREEN}✓ テストフレームワーク: $FRAMEWORK${NC}"
     
     # オプションに応じてコマンドを構築
-    if [ "$WATCH" = true ]; then
-        if [ "$FRAMEWORK" = "jest" ]; then
-            TEST_CMD="$TEST_CMD -- --watch"
-        elif [ "$FRAMEWORK" = "playwright" ]; then
-            TEST_CMD="$TEST_CMD --ui"
+    local cmd
+    local args=()
+    if [ "$FRAMEWORK" = "jest" ]; then
+        cmd="npm"
+        args+=("test")
+        if [ "$WATCH" = true ] || [ "$COVERAGE" = true ]; then
+            args+=("--")
         fi
-    fi
-    
-    if [ "$COVERAGE" = true ]; then
-        if [ "$FRAMEWORK" = "jest" ]; then
-            TEST_CMD="$TEST_CMD -- --coverage"
-        elif [ "$FRAMEWORK" = "playwright" ]; then
+        if [ "$WATCH" = true ]; then
+            args+=("--watch")
+        fi
+        if [ "$COVERAGE" = true ]; then
+            args+=("--coverage")
+        fi
+    elif [ "$FRAMEWORK" = "playwright" ]; then
+        cmd="npx"
+        args+=("playwright" "test")
+        if [ "$WATCH" = true ]; then
+            args+=("--ui")
+        fi
+        if [ "$COVERAGE" = true ]; then
             echo -e "${YELLOW}⚠ Playwrightはカバレッジオプションをサポートしていません${NC}"
         fi
     fi
     
-    echo -e "${YELLOW}実行コマンド: $TEST_CMD${NC}"
+    echo -e "${YELLOW}実行コマンド: $cmd ${args[*]}${NC}"
     echo ""
     
     # テスト実行
-    eval $TEST_CMD
+    "$cmd" "${args[@]}"
     
     if [ $? -eq 0 ]; then
         echo ""
@@ -117,42 +124,46 @@ run_rust_tests() {
     echo -e "${YELLOW}🦀 Rust プロジェクトを検出${NC}"
     
     # cargo-nextest の確認
+    local test_runner_cmd
     if command -v cargo-nextest &> /dev/null; then
         FRAMEWORK="cargo-nextest"
-        TEST_CMD="cargo nextest run"
+        test_runner_cmd="cargo nextest run"
     else
         FRAMEWORK="cargo test"
-        TEST_CMD="cargo test"
+        test_runner_cmd="cargo test"
     fi
     
     echo -e "${GREEN}✓ テストフレームワーク: $FRAMEWORK${NC}"
     
-    # ウォッチモードは cargo-watch を使用
-    if [ "$WATCH" = true ]; then
-        if ! command -v cargo-watch &> /dev/null; then
-            echo -e "${YELLOW}⚠ cargo-watch がインストールされていません${NC}"
-            echo "インストール: cargo install cargo-watch"
-            exit 1
-        fi
-        TEST_CMD="cargo watch -x test"
-    fi
+    local final_cmd
     
-    # カバレッジ測定
     if [ "$COVERAGE" = true ]; then
         if ! command -v cargo-llvm-cov &> /dev/null; then
             echo -e "${YELLOW}⚠ cargo-llvm-cov がインストールされていません${NC}"
             echo "インストール: cargo install cargo-llvm-cov"
             exit 1
         fi
-        TEST_CMD="cargo llvm-cov --html"
+        final_cmd="cargo llvm-cov --html"
+        if [ "$WATCH" = true ]; then
+            echo -e "${YELLOW}⚠ --watch と --coverage は同時に使用できません。--coverage を優先します。${NC}"
+        fi
         echo -e "${YELLOW}カバレッジレポート: target/llvm-cov/html/index.html${NC}"
+    elif [ "$WATCH" = true ]; then
+        if ! command -v cargo-watch &> /dev/null; then
+            echo -e "${YELLOW}⚠ cargo-watch がインストールされていません${NC}"
+            echo "インストール: cargo install cargo-watch"
+            exit 1
+        fi
+        final_cmd="cargo watch -x test"
+    else
+        final_cmd="$test_runner_cmd"
     fi
     
-    echo -e "${YELLOW}実行コマンド: $TEST_CMD${NC}"
+    echo -e "${YELLOW}実行コマンド: $final_cmd${NC}"
     echo ""
     
     # テスト実行
-    eval $TEST_CMD
+    eval "$final_cmd"
     
     if [ $? -eq 0 ]; then
         echo ""
