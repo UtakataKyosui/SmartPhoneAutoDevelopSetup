@@ -39,55 +39,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # 👈 GH_TOKEN を追加して .mcp.json と一致させる
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-claude-env
         with:
           fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install uv CLI
-        uses: astral-sh/setup-uv@v4
-
-      - name: Setup Git configuration
-        run: |
-          git config --global user.name "Claude Code"
-          git config --global user.email "claude-code@anthropic.com"
-          git config --global init.defaultBranch main
-
-      - name: Get PR info (only if PR)
-        if: ${{ github.event.issue.pull_request }}
-        run: |
-          if ! gh pr view ${{ github.event.issue.number }} --json number,title,body,baseRefName,headRefName > pr_info.json; then
-            echo "Failed to get PR info, creating empty file"
-            echo '{}' > pr_info.json
-          fi
-
-      - name: Export PR info
-        if: ${{ github.event.issue.pull_request }}
-        run: |
-          if [ -s pr_info.json ] && [ "$(jq -r .title pr_info.json)" != "null" ]; then
-            # PR_TITLE
-            jq -r .title pr_info.json | tr -d '\r' | while IFS= read -r line; do
-              echo "PR_TITLE=$line" >> $GITHUB_ENV
-            done
-            
-            # PR_BODY
-            pr_body=$(jq -r .body pr_info.json | tr -d '\r')
-            echo "PR_BODY<<EOF" >> $GITHUB_ENV
-            echo "$pr_body" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-            
-            echo "PR_BASE=$(jq -r .baseRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
-            echo "PR_HEAD=$(jq -r .headRefName pr_info.json | tr -d '\r')" >> $GITHUB_ENV
-          else
-            echo "PR_TITLE=" >> $GITHUB_ENV
-            echo "PR_BODY=" >> $GITHUB_ENV
-            echo "PR_BASE=" >> $GITHUB_ENV
-            echo "PR_HEAD=" >> $GITHUB_ENV
-          fi
 
       - name: Load prompt from file
         run: |
