@@ -13,13 +13,15 @@ on:
 jobs:
   claude-spec:
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude plan')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude plan')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude plan')) ||
-      (github.event_name == 'issues' && (
-        contains(github.event.issue.body, '@claude plan') ||
-        contains(github.event.issue.title, '@claude plan')
-      ))
+      github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup' && (
+        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude spec')) ||
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude spec')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude spec')) ||
+        (github.event_name == 'issues' && (
+          contains(github.event.issue.body, '@claude spec') ||
+          contains(github.event.issue.title, '@claude spec')
+        ))
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: write

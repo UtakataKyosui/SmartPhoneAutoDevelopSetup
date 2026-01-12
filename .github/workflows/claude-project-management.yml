@@ -13,13 +13,15 @@ on:
 jobs:
   claude-project-management:
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude spec')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude spec')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude spec')) ||
-      (github.event_name == 'issues' && (
-        contains(github.event.issue.body, '@claude spec') ||
-        contains(github.event.issue.title, '@claude spec')
-      ))
+      github.repository != 'UtakataKyosui/SmartPhoneAutoDevelopSetup' && (
+        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude manage')) ||
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude manage')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude manage')) ||
+        (github.event_name == 'issues' && (
+          contains(github.event.issue.body, '@claude manage') ||
+          contains(github.event.issue.title, '@claude manage')
+        ))
+      )
     runs-on: ubuntu-latest
     permissions:
       # リポジトリのコードやファイルへのアクセス権を付与
