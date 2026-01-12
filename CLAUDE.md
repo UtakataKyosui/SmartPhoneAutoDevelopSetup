@@ -34,6 +34,12 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ├── .claude/                    # Claude Code設定
 │   ├── commands/              # カスタムスラッシュコマンド定義
 │   ├── agents/                # 専門サブエージェント定義
+│   ├── skills/                # Agent Skills（10個）
+│   │   ├── tdd-basics/        # TDD基礎
+│   │   ├── testing-typescript/ # TypeScript/JavaScriptテスト
+│   │   ├── testing-rust/      # Rustテスト
+│   │   ├── ci-cd-setup/       # CI/CD設定
+│   │   └── library-research/  # ライブラリ調査
 │   ├── hooks/                 # コード検証・整形スクリプト
 │   └── settings.json          # Claude Code設定
 ├── .github/workflows/         # GitHub Actions（6つのワークフロー）
@@ -45,13 +51,79 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 │   └── claude-project-management.yml # 高度なプロジェクト管理
 ├── .specify/                  # Spec Kit設定・テンプレート・実行スクリプト
 ├── docs/                      # プロジェクトドキュメント
-├── .mcp.json                  # MCP設定
+├── .mcp.json                  # MCP設定（context7, magic, github）
 ├── CLAUDE.md                  # このファイル
 └── README.md                  # プロジェクト概要
 ```
 
+### Agent Skills
+
+本プロジェクトは10個の特化したAgent Skillsを提供します：
+
+1. **tdd-basics**: TDD基礎（言語非依存）
+   - Red-Green-Refactorサイクル
+   - TDDベストプラクティス
+   - テスト戦略
+
+2. **testing-typescript**: TypeScript/JavaScriptテスト
+   - Jest（単体・統合テスト）
+   - Playwright（E2Eテスト）
+   - モックとカバレッジ
+
+3. **testing-rust**: Rustテスト
+   - cargo test/nextest
+   - mockallによるモック
+   - cargo-llvm-covによるカバレッジ
+
+4. **ci-cd-setup**: CI/CD設定
+   - ghatsによる型安全なワークフロー定義
+   - GitHub Actionsテスト自動化
+   - デプロイメント戦略
+
+5. **library-research**: ライブラリ調査
+   - Context7 MCPを活用した最新情報収集
+   - ライブラリ比較・評価
+   - 調査結果のドキュメント化
+
+6. **spec-kit-workflow**: Spec Kitワークフロー
+   - 仕様作成（Specify）
+   - 仕様明確化（Clarify）
+   - 実装計画（Plan）
+   - タスク生成（Tasks）
+   - TDD実装（Implement）
+   - 品質分析（Analyze）
+   - プロジェクト憲法（Constitution）
+
+7. **code-review-workflow**: コードレビューワークフロー
+   - 体系的なレビュープロセス
+   - セキュリティ・パフォーマンスチェック
+   - レビューコメントのベストプラクティス
+
+8. **debugging-workflow**: デバッグワークフロー
+   - 効率的な問題解決アプローチ
+   - ログ分析とデバッグツール
+   - 体系的な原因特定
+
+9. **refactoring-workflow**: リファクタリングワークフロー
+   - 安全なリファクタリング手順
+   - コードスメルの特定
+   - テストファーストリファクタリング
+
+10. **documentation-maintenance**: ドキュメントメンテナンス
+    - README・API ドキュメント作成
+    - ドキュメント品質チェック
+    - 継続的なメンテナンス
+
+### MCP設定
+
+効率的な開発のため、以下のMCPサーバを使用します：
+
+- **context7**: 最新情報の調査（ライブラリ、フレームワーク、ベストプラクティス）
+- **magic**: 開発支援機能
+- **github**: GitHub連携（Issue、PR、リポジトリ操作）
+
 ### ドキュメント
-- `docs/COMMANDS.md` : スラッシュコマンド詳細ガイド
+- `docs/SKILLS.md` : Agent Skills詳細ガイド
 - `docs/AGENTS.md` : サブエージェント詳細ガイド
 - `docs/SPEC_KIT_TDD_WORKFLOW.md` : Spec Kit + TDD統合ワークフロー
 - `docs/GITHUB_ACTIONS_SETUP.md` : GitHub Actions設定ガイド
@@ -105,30 +177,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 - `statuses: write` - コミット状態更新
 - `repository-projects: write` - プロジェクト操作
 
-## カスタムスラッシュコマンド
 
-### プロジェクト管理
-- `/project-management:setup-project` - プロジェクトの初期セットアップ
-
-### Spec Kit統合コマンド（仕様駆動開発）
-- `/spec-kit:specify` - 自然言語から正式仕様を作成
-- `/spec-kit:plan` - 仕様から具体的な実装計画を生成
-- `/spec-kit:clarify` - 仕様の曖昧な点を対話的に明確化
-- `/spec-kit:tasks` - 実装計画からTDD準拠のタスクリストを生成
-- `/spec-kit:implement` - TDDサイクルに従った機能実装
-- `/spec-kit:analyze` - 既存仕様の分析と評価
-- `/spec-kit:constitution` - プロジェクト憲法の作成・更新
-
-### 開発支援
-- `/development:code-review` - コード品質分析とレビュー
-- `/development:debug-help` - デバッグ支援とエラー分析
-- `/development:refactor` - コードリファクタリングと改善
-
-### テスト
-- `/testing:test-gen` - テストコード生成
-
-### ドキュメンテーション
-- `/documentation:docs-gen` - ドキュメント生成
 
 ## 専門サブエージェント
 

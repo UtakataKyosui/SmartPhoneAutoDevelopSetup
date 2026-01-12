@@ -90,17 +90,9 @@ jobs:
           else
             PROMPT_CONTENT="# 仕様定義・計画・実装支援
 
-          ## Spec Kit統合コマンド利用可能
+          ## Agent Skills利用可能
 
-          以下のスラッシュコマンドを適切に判断して実行してください：
-
-          - \`/spec-kit:specify\` - 自然言語から正式な仕様を作成
-          - \`/spec-kit:plan\` - 仕様から具体的な実装計画を生成
-          - \`/spec-kit:clarify\` - 仕様の曖昧な点を対話的に明確化
-          - \`/spec-kit:tasks\` - 実装計画からTDD準拠のタスクリストを生成
-          - \`/spec-kit:implement\` - TDDサイクルに従った機能実装
-          - \`/spec-kit:analyze\` - 既存仕様の分析と評価
-          - \`/spec-kit:constitution\` - プロジェクト憲法の作成・更新
+          Agent Skillsを参照してください
 
           ## 実行ガイドライン
 
@@ -109,7 +101,7 @@ jobs:
           3. **MCPツール**を優先使用
           4. **プロジェクト憲法**への準拠を確認
 
-          コメント内容から適切な作業を判断し、必要に応じて複数のスラッシュコマンドを組み合わせて実行してください。"
+          コメント内容から適切な作業を判断し、Agent Skillsのガイドラインに従って実行してください。"
           fi
           {
             echo 'SPEC_PROMPT<<EOF'

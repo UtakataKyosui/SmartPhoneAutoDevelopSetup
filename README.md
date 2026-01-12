@@ -8,6 +8,8 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 - **スマホ対応開発環境**: スマートフォンからClaude Code Actionsで開発可能
 - **Spec Kit + TDD統合**: 仕様駆動開発とテスト駆動開発を組み合わせた開発フロー
 - **Issue Driven開発**: すべての開発はIssueから開始し、体系的に管理
+- **Agent Skills**: 10個の特化したSkillによる効率的なガイダンス
+- **最適化されたMCP**: 必要最小限のMCPサーバで効率的な開発
 - **自動化されたワークフロー**: GitHub Actionsによる自動レビュー・テスト・デプロイ
 - **豊富なスラッシュコマンド**: 開発作業を効率化するカスタムコマンド
 - **専門サブエージェント**: 分野特化型AIエージェントによる高品質な開発支援
@@ -18,10 +20,17 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ├── .claude/                    # Claude Code設定
 │   ├── commands/              # カスタムスラッシュコマンド
 │   ├── agents/                # 専門サブエージェント
+│   ├── skills/                # Agent Skills（10個）
+│   │   ├── tdd-basics/        # TDD基礎
+│   │   ├── testing-typescript/ # TypeScript/JavaScriptテスト
+│   │   ├── testing-rust/      # Rustテスト
+│   │   ├── ci-cd-setup/       # CI/CD設定
+│   │   └── library-research/  # ライブラリ調査
 │   └── hooks/                 # コード検証・整形スクリプト
 ├── .github/workflows/         # GitHub Actions
 ├── .specify/                  # Spec Kit設定・テンプレート
 ├── docs/                      # プロジェクトドキュメント
+├── .mcp.json                  # MCP設定（context7, magic, github）
 ├── CLAUDE.md                  # Claude Codeへの詳細指示
 └── README.md                  # このファイル
 ```
@@ -35,26 +44,73 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 4. **TDD実装** (`/spec-kit:implement`) - Red-Green-Refactorサイクル
 5. **品質確認** (`/development:code-review`, `/spec-kit:constitution`) - 品質とプロジェクト憲法への準拠確認
 
-## 📋 利用可能なスラッシュコマンド
 
-### プロジェクト管理
-- `/project-management:setup-project` - プロジェクトの初期セットアップ
 
-### Spec Kit統合コマンド（仕様駆動開発）
-- `/spec-kit:specify` - 自然言語から仕様作成
-- `/spec-kit:plan` - 仕様から実装計画作成
-- `/spec-kit:clarify` - 仕様の対話的明確化
-- `/spec-kit:tasks` - TDD準拠のタスクリスト生成
-- `/spec-kit:implement` - TDDサイクルでの実装
-- `/spec-kit:analyze` - 既存仕様の分析
-- `/spec-kit:constitution` - プロジェクト憲法管理
+## 🎯 Agent Skills
 
-### 開発支援
-- `/development:code-review` - コード品質分析とレビュー
-- `/development:debug-help` - デバッグ支援とエラー分析
-- `/development:refactor` - コードリファクタリングと改善
-- `/testing:test-gen` - テストコード生成
-- `/documentation:docs-gen` - ドキュメント生成
+開発作業を効率化する10個の特化したSkillを提供：
+
+### 1. tdd-basics - TDD基礎
+- Red-Green-Refactorサイクル
+- TDDベストプラクティス
+- テスト戦略（言語非依存）
+
+### 2. testing-typescript - TypeScript/JavaScriptテスト
+- Jest（単体・統合テスト）
+- Playwright（E2Eテスト）
+- モックとカバレッジ測定
+
+### 3. testing-rust - Rustテスト
+- cargo test/nextest
+- mockallによるモック
+- cargo-llvm-covによるカバレッジ
+
+### 4. ci-cd-setup - CI/CD設定
+- ghatsによる型安全なワークフロー定義
+- GitHub Actionsテスト自動化
+- デプロイメント戦略
+
+### 5. library-research - ライブラリ調査
+- Context7 MCPを活用した最新情報収集
+- ライブラリ比較・評価
+- 調査結果のドキュメント化
+
+### 6. spec-kit-workflow - Spec Kitワークフロー
+- 仕様作成（Specify）
+- 仕様明確化（Clarify）
+- 実装計画（Plan）
+- タスク生成（Tasks）
+- TDD実装（Implement）
+- 品質分析（Analyze）
+- プロジェクト憲法（Constitution）
+
+### 7. code-review-workflow - コードレビューワークフロー
+- 体系的なレビュープロセス
+- セキュリティ・パフォーマンスチェック
+- レビューコメントのベストプラクティス
+
+### 8. debugging-workflow - デバッグワークフロー
+- 効率的な問題解決アプローチ
+- ログ分析とデバッグツール
+- 体系的な原因特定
+
+### 9. refactoring-workflow - リファクタリングワークフロー
+- 安全なリファクタリング手順
+- コードスメルの特定
+- テストファーストリファクタリング
+
+### 10. documentation-maintenance - ドキュメントメンテナンス
+- README・API ドキュメント作成
+- ドキュメント品質チェック
+- 継続的なメンテナンス
+
+## 🔌 MCP設定
+
+効率的な開発のため、以下のMCPサーバを使用：
+
+- **context7**: 最新情報の調査（ライブラリ、フレームワーク、ベストプラクティス）
+- **magic**: 開発支援機能
+- **github**: GitHub連携（Issue、PR、リポジトリ操作）
 
 ## 🤖 専門サブエージェント
 
@@ -213,7 +269,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 
 ## 📖 詳細ドキュメント
 
-- [COMMANDS.md](docs/COMMANDS.md) - スラッシュコマンド詳細ガイド
+- [SKILLS.md](docs/SKILLS.md) - Agent Skills詳細ガイド
 - [AGENTS.md](docs/AGENTS.md) - サブエージェント詳細ガイド
 - [SPEC_KIT_TDD_WORKFLOW.md](docs/SPEC_KIT_TDD_WORKFLOW.md) - Spec Kit + TDD統合ワークフロー
 - [GITHUB_ACTIONS_SETUP.md](docs/GITHUB_ACTIONS_SETUP.md) - GitHub Actions設定ガイド

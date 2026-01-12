@@ -1,0 +1,1 @@
+../../../shared/scripts/run_tests.sh

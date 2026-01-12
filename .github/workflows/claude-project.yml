@@ -83,6 +83,7 @@ jobs:
             echo "PR_HEAD=" >> $GITHUB_ENV
           fi
 
+
       - name: Load project management prompt
         run: |
           if [ -f docs/project-prompt.md ]; then
@@ -90,7 +91,11 @@ jobs:
           else
             PROMPT_CONTENT="# プロジェクト管理・初期セットアップ支援
 
-          ## プロジェクト管理コマンド利用可能
+          ## Agent Skills利用可能
+
+          Agent Skillsを参照してください
+
+          ## プロジェクト管理
 
           以下のスラッシュコマンドを適切に判断して実行してください：
 
