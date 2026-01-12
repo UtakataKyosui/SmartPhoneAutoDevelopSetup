@@ -88,6 +88,24 @@ jobs:
             echo 'EOF'
           } >> $GITHUB_ENV
 
+      - name: Render Claude Prompt
+        id: render_prompt
+        shell: bash
+        run: |
+          export PR_NUMBER="${{ github.event.issue.number }}"
+          export COMMENT_BODY="${{ github.event.comment.body }}"
+          export GITHUB_BASE_REF="${{ github.base_ref }}"
+          export GITHUB_HEAD_REF="${{ github.head_ref }}"
+          
+          # Define variables to substitute to avoid accidental replacement
+          VARS='$GITHUB_REPOSITORY $GITHUB_ACTOR $PR_NUMBER $PR_TITLE $PR_BODY $COMMENT_BODY $PR_BASE $PR_HEAD $GITHUB_BASE_REF $GITHUB_HEAD_REF $PROJECT_PROMPT'
+          
+          envsubst "$VARS" < .github/prompts/claude-project.md > prompt_rendered.md
+          
+          echo "CLAUDE_PROMPT<<EOF" >> $GITHUB_ENV
+          cat prompt_rendered.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Run Claude Code Project Management
         id: claude-project
         uses: anthropics/claude-code-action@v1
@@ -106,28 +124,7 @@ jobs:
             statuses: write
             repository-projects: write
             id-token: write
-          prompt: |
-            # Claude Code プロジェクト管理・初期セットアップ支援
-
-            ## GitHub コンテキスト
-            リポジトリ: ${{ github.repository }}
-            実行ユーザー: ${{ github.actor }}
-
-            ### PR / Issue 情報
-            - PR番号: ${{ github.event.issue.number }}
-            - PRタイトル: ${{ env.PR_TITLE }}
-            - PR本文: |
-              ${{ env.PR_BODY }}
-            - コメント本文: |
-              ${{ github.event.comment.body }}
-
-            ### ブランチ情報
-            - Baseブランチ: ${{ env.PR_BASE }}
-            - Headブランチ: ${{ env.PR_HEAD }}
-            - Baseブランチ (GitHub): ${{ github.base_ref }}
-            - Headブランチ (GitHub): ${{ github.head_ref }}
-
-            ${{ env.PROJECT_PROMPT }}
+          prompt: ${{ env.CLAUDE_PROMPT }}
 
       - name: Post completion status
         if: success()
