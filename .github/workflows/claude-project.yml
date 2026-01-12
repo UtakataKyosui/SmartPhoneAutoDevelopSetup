@@ -92,13 +92,13 @@ jobs:
         id: render_prompt
         shell: bash
         run: |
-          export PR_NUMBER="${{ github.event.issue.number }}"
+          export ISSUE_NUMBER="${{ github.event.issue.number }}"
           export COMMENT_BODY="${{ github.event.comment.body }}"
           export GITHUB_BASE_REF="${{ github.base_ref }}"
           export GITHUB_HEAD_REF="${{ github.head_ref }}"
           
           # Define variables to substitute to avoid accidental replacement
-          VARS='$GITHUB_REPOSITORY $GITHUB_ACTOR $PR_NUMBER $PR_TITLE $PR_BODY $COMMENT_BODY $PR_BASE $PR_HEAD $GITHUB_BASE_REF $GITHUB_HEAD_REF $PROJECT_PROMPT'
+          VARS='$GITHUB_REPOSITORY $GITHUB_ACTOR $ISSUE_NUMBER $PR_TITLE $PR_BODY $COMMENT_BODY $PR_BASE $PR_HEAD $GITHUB_BASE_REF $GITHUB_HEAD_REF $PROJECT_PROMPT'
           
           envsubst "$VARS" < .github/prompts/claude-project.md > prompt_rendered.md
           

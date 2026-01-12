@@ -5,7 +5,7 @@
 実行ユーザー: ${GITHUB_ACTOR}
 
 ### PR / Issue 情報
-- PR番号: ${PR_NUMBER}
+- PR番号: ${ISSUE_NUMBER}
 - PRタイトル: ${PR_TITLE}
 - PR本文: |
   ${PR_BODY}

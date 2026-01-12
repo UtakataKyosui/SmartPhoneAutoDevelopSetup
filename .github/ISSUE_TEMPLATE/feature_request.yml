@@ -76,9 +76,13 @@ body:
       label: 📋 開発フェーズ / Development Phase
       description: どの開発フェーズから開始しますか？
       options:
+        - label: "📋 要件定義 / Requirements"
           required: false
+        - label: "📐 設計 / Design"
           required: false
+        - label: "💻 実装 / Implementation"
           required: false
+        - label: "🧪 テスト / Testing"
           required: false
 
   - type: textarea
