@@ -8,7 +8,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 - **スマホ対応開発環境**: スマートフォンからClaude Code Actionsで開発可能
 - **Spec Kit + TDD統合**: 仕様駆動開発とテスト駆動開発を組み合わせた開発フロー
 - **Issue Driven開発**: すべての開発はIssueから開始し、体系的に管理
-- **Agent Skills**: 5つの特化したSkillによる効率的なガイダンス
+- **Agent Skills**: 10個の特化したSkillによる効率的なガイダンス
 - **最適化されたMCP**: 必要最小限のMCPサーバで効率的な開発
 - **自動化されたワークフロー**: GitHub Actionsによる自動レビュー・テスト・デプロイ
 - **豊富なスラッシュコマンド**: 開発作業を効率化するカスタムコマンド
@@ -20,7 +20,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ├── .claude/                    # Claude Code設定
 │   ├── commands/              # カスタムスラッシュコマンド
 │   ├── agents/                # 専門サブエージェント
-│   ├── skills/                # Agent Skills（5個）
+│   ├── skills/                # Agent Skills（10個）
 │   │   ├── tdd-basics/        # TDD基礎
 │   │   ├── testing-typescript/ # TypeScript/JavaScriptテスト
 │   │   ├── testing-rust/      # Rustテスト

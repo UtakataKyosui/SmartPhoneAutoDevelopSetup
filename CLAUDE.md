@@ -34,7 +34,7 @@ Spec Kit + TDD統合開発フローを採用し、Issue Drivenで品質の高い
 ├── .claude/                    # Claude Code設定
 │   ├── commands/              # カスタムスラッシュコマンド定義
 │   ├── agents/                # 専門サブエージェント定義
-│   ├── skills/                # Agent Skills（5個）
+│   ├── skills/                # Agent Skills（10個）
 │   │   ├── tdd-basics/        # TDD基礎
 │   │   ├── testing-typescript/ # TypeScript/JavaScriptテスト
 │   │   ├── testing-rust/      # Rustテスト
